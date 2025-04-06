@@ -1,10 +1,8 @@
 package com.uniquindio.redsocial.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.uniquindio.redsocial.model.Usuario;
+import com.uniquindio.redsocial.dto.UsuarioDTO;
 import com.uniquindio.redsocial.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,19 +12,19 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @PostMapping("/registrar")
-    public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
-        usuarioService.registrarUsuario(usuario);
-        return ResponseEntity.ok("Usuario registrado con éxito.");
+    @PostMapping("/registro")
+    public String registrar(@RequestBody UsuarioDTO dto) {
+        usuarioService.registrar(dto);
+        return "Usuario registrado correctamente";
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String correo, @RequestParam String contrasenia) {
-        boolean valido = usuarioService.verificarCredenciales(correo, contrasenia);
-        if (valido) {
-            return ResponseEntity.ok("Inicio de sesión exitoso.");
+    public String login(@RequestParam String correo, @RequestParam String contraseña) {
+        if (usuarioService.autenticar(correo, contraseña)) {
+            return "Inicio de sesión exitoso";
         } else {
-            return ResponseEntity.status(401).body("Credenciales incorrectos.");
+            return "Credenciales incorrectas";
         }
     }
 }
+

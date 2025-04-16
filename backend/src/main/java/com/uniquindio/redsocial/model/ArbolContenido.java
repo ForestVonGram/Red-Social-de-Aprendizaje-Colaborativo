@@ -42,5 +42,41 @@ public class ArbolContenido {
         buscarRec(nodo.izquierda, clave, resultados);
         buscarRec(nodo.derecha, clave, resultados);
     }
+
+    public void elimminarPorTitulo(String titulo) {
+        raiz = eliminarRec(raiz, titulo.toLowerCase());
+    }
+
+    private Nodo eliminarRec(Nodo nodo, String titulo) {
+        if (nodo == null) return null;
+
+        int comparacion = titulo.compareTo(nodo.contenido.getTitulo().toLowerCase());
+
+        if (comparacion < 0) {
+            nodo.izquierda = eliminarRec(nodo.izquierda, titulo);
+        } else if (comparacion > 0) {
+            nodo.derecha = eliminarRec(nodo.derecha, titulo);
+        } else {
+            if (nodo.izquierda == null && nodo.derecha == null) {
+                return null;
+            }
+
+            if (nodo.izquierda == null) return nodo.derecha;
+            if (nodo.derecha == null) return nodo.izquierda;
+
+            Nodo sucesor = encontrarMinimo(nodo.derecha);
+            nodo.contenido = sucesor.contenido;
+            nodo.derecha = eliminarRec(nodo.derecha, sucesor.contenido.getTitulo().toLowerCase());
+        }
+
+        return nodo;
+    }
+
+    private Nodo encontrarMinimo(Nodo nodo) {
+        while (nodo.izquierda != null) {
+            nodo = nodo.izquierda;
+        }
+        return nodo;
+    }
 }
 

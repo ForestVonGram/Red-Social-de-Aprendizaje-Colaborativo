@@ -14,6 +14,30 @@ public class GrafoUsuariosService {
         this.grafoUsuarios = grafoUsuarios;
     }
 
+    public void agregarUsuario(Usuario usuario) {
+        grafoUsuarios.agregarUsuario(usuario);
+    }
+
+    public void agregarConexion(String correo1, String correo2) {
+        grafoUsuarios.conectarUsuarios(correo1, correo2);
+    }
+
+    public void eliminarConexion(String correo1, String correo2) {
+        grafoUsuarios.eliminarConexion(correo1, correo2);
+    }
+
+    public boolean estanConectados(String correo1, String correo2) {
+        return grafoUsuarios.estanConectados(correo1, correo2);
+    }
+
+    public Set<Usuario> obtenerAmigos(String correo) {
+        return grafoUsuarios.obtenerAmigos(correo);
+    }
+
+    public Set<Usuario> recomendarAmigos(String correo) {
+        return grafoUsuarios.recomendarAmigos(correo);
+    }
+
     public List<Usuario> buscarRutaMasCorta(String correoOrigen, String correoDestino) {
         return grafoUsuarios.buscarRutaMasCorta(correoOrigen, correoDestino);
     }

@@ -20,6 +20,17 @@ public class GrafoUsuarios {
         }
     }
 
+    public void eliminarConexion(String correo1, String correo2) {
+        if (usuarios.containsKey(correo1) && usuarios.containsKey(correo2)) {
+            conexiones.getOrDefault(correo1, new HashSet<>()).remove(correo2);
+            conexiones.getOrDefault(correo2, new HashSet<>()).remove(correo1);
+        }
+    }
+
+    public boolean estanConectados(String correo1, String correo2) {
+        return conexiones.getOrDefault(correo1, new HashSet<>()).contains(correo2);
+    }
+
     public Set<Usuario> obtenerAmigos(String correo) {
         Set<Usuario> amigos = new HashSet<>();
         Set<String> conexionesUsuario = conexiones.getOrDefault(correo, new HashSet<>());

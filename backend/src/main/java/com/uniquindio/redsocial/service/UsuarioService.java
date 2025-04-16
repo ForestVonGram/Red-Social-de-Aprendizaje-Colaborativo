@@ -20,7 +20,8 @@ public class UsuarioService {
                 UUID.randomUUID().toString(),
                 dto.getNombre(),
                 dto.getCorreo(),
-                dto.getContrasenia()
+                dto.getContrasenia(),
+                dto.getIntereses()
         );
         return usuarioRepository.save(usuario);
     }

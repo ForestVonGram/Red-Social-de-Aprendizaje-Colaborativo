@@ -3,6 +3,8 @@ package com.uniquindio.redsocial.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -15,5 +17,8 @@ public class Usuario {
     private String nombre;
     private String correo;
     private String contrasenia;
+
+    @ElementCollection
+    private List<String> intereses;
 }
 

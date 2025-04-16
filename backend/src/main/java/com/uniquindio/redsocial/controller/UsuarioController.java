@@ -19,8 +19,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String correo, @RequestParam String contraseña) {
-        if (usuarioService.autenticar(correo, contraseña)) {
+    public String login(@RequestBody UsuarioDTO dto) {
+        if (usuarioService.autenticar(dto.getCorreo(), dto.getContrasenia())) {
             return "Inicio de sesión exitoso";
         } else {
             return "Credenciales incorrectas";

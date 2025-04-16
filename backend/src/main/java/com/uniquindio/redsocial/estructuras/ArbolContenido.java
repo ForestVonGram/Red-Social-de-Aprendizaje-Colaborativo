@@ -1,4 +1,6 @@
-package com.uniquindio.redsocial.model;
+package com.uniquindio.redsocial.estructuras;
+
+import com.uniquindio.redsocial.model.Contenido;
 
 import java.util.ArrayList;
 import java.util.List;

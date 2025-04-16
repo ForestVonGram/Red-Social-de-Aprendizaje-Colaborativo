@@ -1,6 +1,6 @@
 package com.uniquindio.redsocial.service;
 
-import com.uniquindio.redsocial.model.ArbolContenido;
+import com.uniquindio.redsocial.estructuras.ArbolContenido;
 import com.uniquindio.redsocial.model.Contenido;
 import com.uniquindio.redsocial.repository.ContenidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;

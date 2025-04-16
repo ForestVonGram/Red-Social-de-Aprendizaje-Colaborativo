@@ -2,10 +2,7 @@ package com.uniquindio.redsocial.estructuras;
 
 import com.uniquindio.redsocial.model.Usuario;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class GrafoUsuarios {
     private final Map<String, Usuario> usuarios = new HashMap<>();
@@ -46,5 +43,50 @@ public class GrafoUsuarios {
         }
 
         return recomendados;
+    }
+
+    public List<Usuario> buscarRutaMasCorta(String correoOrigen, String correoDestino) {
+        if (!usuarios.containsKey(correoOrigen) || !usuarios.containsKey(correoDestino)) {
+            return Collections.emptyList();
+        }
+
+        Queue<String> cola = new LinkedList<>();
+        Map<String, String> predecesores = new HashMap<>();
+        Set<String> visitados = new HashSet<>();
+
+        cola.add(correoOrigen);
+        visitados.add(correoOrigen);
+
+        while (!cola.isEmpty()) {
+            String actual = cola.poll();
+
+            if (actual.equals(correoDestino)) {
+                break;
+            }
+
+            for (String vecino : conexiones.getOrDefault(actual, new HashSet<>())) {
+                if (!visitados.contains(vecino)) {
+                    cola.add(vecino);
+                    visitados.add(vecino);
+                    predecesores.put(actual, vecino);
+                }
+            }
+        }
+
+        List<Usuario> ruta = new LinkedList<>();
+        String paso = correoDestino;
+
+        while (paso != null && predecesores.containsKey(paso)) {
+            ruta.add(0, usuarios.get(paso));
+            paso = predecesores.get(paso);
+        }
+
+        if (paso != null && paso.equals(correoOrigen)) {
+
+            ruta.add(0, usuarios.get(correoOrigen));
+            return ruta;
+        }
+
+        return Collections.emptyList();
     }
 }

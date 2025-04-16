@@ -31,6 +31,14 @@ public class GrafoUsuarios {
         return conexiones.getOrDefault(correo1, new HashSet<>()).contains(correo2);
     }
 
+    public Map<String, Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public Map<String, Set<String>> getConexiones() {
+        return conexiones;
+    }
+
     public Set<Usuario> obtenerAmigos(String correo) {
         Set<Usuario> amigos = new HashSet<>();
         Set<String> conexionesUsuario = conexiones.getOrDefault(correo, new HashSet<>());

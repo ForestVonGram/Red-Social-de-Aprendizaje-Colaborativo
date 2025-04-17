@@ -8,6 +8,10 @@ public class GrafoUsuarios {
     private final Map<String, Usuario> usuarios = new HashMap<>();
     private final Map<String, Set<String>> conexiones = new HashMap<>();
 
+    public Usuario getUsuario(String correo) {
+        return usuarios.get(correo);
+    }
+
     public void agregarUsuario(Usuario usuario) {
         usuarios.putIfAbsent(usuario.getCorreo(), usuario);
         conexiones.putIfAbsent(usuario.getCorreo(), new HashSet<>());
@@ -120,5 +124,28 @@ public class GrafoUsuarios {
         }
 
         return resultado;
+    }
+
+    public Set<Usuario> obtenerUsuariosConectadosIndirectamente(String correo) {
+        Set<Usuario> conectados = new HashSet<>();
+        if (!usuarios.containsKey(correo)) return conectados;
+
+        Set<String> visitados = new HashSet<>();
+        Queue<String> cola = new LinkedList<>();
+
+        cola.add(correo);
+        visitados.add(correo);
+
+        while (!cola.isEmpty()) {
+            String actual = cola.poll();
+            for (String vecino : conexiones.getOrDefault(actual, new HashSet<>())) {
+                if (!visitados.contains(vecino)) {
+                    visitados.add(vecino);
+                    cola.add(vecino);
+                    conectados.add(usuarios.get(vecino));
+                }
+            }
+        }
+        return conectados;
     }
 }

@@ -55,4 +55,9 @@ public class GrafoUsuariosController {
     public List<Usuario> obtenerUsuariosConMasConexiones(@RequestParam(defaultValue = "5") int top) {
         return grafoUsuariosService.obtenerUsuariosConMasConexiones(top);
     }
+
+    @GetMapping("/sugerencias-intereses/{correo}")
+    public List<Usuario> sugerirCompanerosPorIntereses(@PathVariable String correo) {
+        return grafoUsuariosService.sugerirCompanerosPorIntereses(correo);
+    }
 }

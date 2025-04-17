@@ -45,4 +45,43 @@ public class GrafoUsuariosService {
     public List<Usuario> obtenerUsuariosConMasConexiones(int top) {
         return grafoUsuarios.obtenerUsuariosConMasConexiones(top);
     }
+
+    public List<Usuario> sugerirCompanerosPorIntereses(String correoUsuario) {
+        Usuario usuario = grafoUsuarios.getUsuario(correoUsuario);
+        if (usuario == null) return Collections.emptyList();
+
+        Set<Usuario> amigos = grafoUsuarios.obtenerAmigos(correoUsuario);
+        Set<Usuario> conectados = grafoUsuarios.obtenerUsuariosConectadosIndirectamente(correoUsuario);
+
+        List<Usuario> sugerencias = new ArrayList<>();
+
+        for (Usuario candidato : conectados) {
+            if (!amigos.contains(candidato) &&
+                    !candidato.getCorreo().equals(correoUsuario) &&
+                    tienenInteresesEnComun(usuario, candidato)) {
+                sugerencias.add(candidato);
+            }
+        }
+
+        sugerencias.sort((a, b) ->
+                Integer.compare(contarInteresesEnComun(usuario, b), contarInteresesEnComun(usuario, a))
+        );
+
+        return sugerencias;
+    }
+
+    private boolean tienenInteresesEnComun(Usuario u1, Usuario u2) {
+        for (String interes : u1.getIntereses()) {
+            if (u2.getIntereses().contains(interes)) return true;
+        }
+        return false;
+    }
+
+    private int contarInteresesEnComun(Usuario u1, Usuario u2) {
+        int contador = 0;
+        for (String interes : u1.getIntereses()) {
+            if (u2.getIntereses().contains(interes)) contador++;
+        }
+        return contador;
+    }
 }

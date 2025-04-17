@@ -7,11 +7,12 @@ import com.uniquindio.redsocial.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ContenidoService {
+
+    private final Map<String, Contenido> contenidos = new HashMap<>();
 
     @Autowired
     private ContenidoRepository contenidoRepository;
@@ -32,5 +33,13 @@ public class ContenidoService {
                 null
         );
         return contenidoRepository.save(contenido);
+    }
+
+    public boolean eliminarContenido(String id) {
+        return contenidos.remove(id) != null;
+    }
+
+    public List<Contenido> listarContenidos() {
+        return new ArrayList<>(contenidos.values());
     }
 }

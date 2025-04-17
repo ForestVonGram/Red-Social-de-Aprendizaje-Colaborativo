@@ -108,4 +108,23 @@ public class GrafoUsuarios {
 
         return Collections.emptyList();
     }
+
+    public List<Usuario> obtenerUsuariosConMasConexiones(int top) {
+        List<Map.Entry<String, Integer>> listaConexiones = new ArrayList<>();
+
+        for (Map.Entry<String, Set<String>> entry : conexiones.entrySet()) {
+            listaConexiones.add(new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue().size()));
+        }
+
+        listaConexiones.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+        List<Usuario> resultado = new ArrayList<>();
+
+        for (int i = 0; i < Math.min(top, listaConexiones.size()); i++) {
+            String correo = listaConexiones.get(i).getKey();
+            resultado.add(usuarios.get(correo));
+        }
+
+        return resultado;
+    }
 }

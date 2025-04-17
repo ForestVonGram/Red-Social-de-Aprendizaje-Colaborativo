@@ -50,4 +50,9 @@ public class GrafoUsuariosController {
     public List<Usuario> buscarRutaMasCorta(@RequestParam String origen, @RequestParam String destino) {
         return grafoUsuariosService.buscarRutaMasCorta(origen, destino);
     }
+
+    @GetMapping("/top-conectados")
+    public List<Usuario> obtenerUsuariosConMasConexiones(@RequestParam(defaultValue = "5") int top) {
+        return grafoUsuariosService.obtenerUsuariosConMasConexiones(top);
+    }
 }

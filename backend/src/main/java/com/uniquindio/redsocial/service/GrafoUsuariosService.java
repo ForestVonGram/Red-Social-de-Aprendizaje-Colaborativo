@@ -41,4 +41,8 @@ public class GrafoUsuariosService {
     public List<Usuario> buscarRutaMasCorta(String correoOrigen, String correoDestino) {
         return grafoUsuarios.buscarRutaMasCorta(correoOrigen, correoDestino);
     }
+
+    public List<Usuario> obtenerUsuariosConMasConexiones(int top) {
+        return grafoUsuarios.obtenerUsuariosConMasConexiones(top);
+    }
 }

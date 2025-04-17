@@ -79,31 +79,25 @@ public class GrafoUsuarios {
         while (!cola.isEmpty()) {
             String actual = cola.poll();
 
-            if (actual.equals(correoDestino)) {
-                break;
-            }
-
             for (String vecino : conexiones.getOrDefault(actual, new HashSet<>())) {
                 if (!visitados.contains(vecino)) {
-                    cola.add(vecino);
                     visitados.add(vecino);
-                    predecesores.put(actual, vecino);
+                    predecesores.put(vecino, actual);
+                    cola.add(vecino);
+
+                    if (vecino.equals(correoDestino)) {
+                        List<Usuario> ruta = new LinkedList<>();
+                        String paso = correoDestino;
+
+                        while (paso != null) {
+                            ruta.add(0, usuarios.get(paso));
+                            paso = predecesores.get(paso);
+                        }
+
+                        return ruta;
+                    }
                 }
             }
-        }
-
-        List<Usuario> ruta = new LinkedList<>();
-        String paso = correoDestino;
-
-        while (paso != null && predecesores.containsKey(paso)) {
-            ruta.add(0, usuarios.get(paso));
-            paso = predecesores.get(paso);
-        }
-
-        if (paso != null && paso.equals(correoOrigen)) {
-
-            ruta.add(0, usuarios.get(correoOrigen));
-            return ruta;
         }
 
         return Collections.emptyList();

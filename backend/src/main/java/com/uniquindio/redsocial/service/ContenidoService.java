@@ -42,4 +42,8 @@ public class ContenidoService {
     public List<Contenido> listarContenidos() {
         return new ArrayList<>(contenidos.values());
     }
+
+    public List<Contenido> obtenerContenidosMasValorados() {
+        return contenidoRepository.findMostValuedContents();
+    }
 }

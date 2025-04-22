@@ -1,9 +1,7 @@
 package com.uniquindio.redsocial.controller;
 
-import com.uniquindio.redsocial.dto.SolicitudAyudaDTO;
 import com.uniquindio.redsocial.model.SolicitudAyuda;
 import com.uniquindio.redsocial.service.SolicitudAyudaService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +15,21 @@ public class SolicitudAyudaController {
     private final SolicitudAyudaService ayudaService;
 
     @PostMapping("/registrar")
-    public ResponseEntity<String> registrarSolicitud(@RequestBody SolicitudAyudaDTO dto) {
-        ayudaService.registrarSolicitud(dto.getCorreoEstudiante(), dto.getDescripcion(), dto.getPrioridad());
-        return ResponseEntity.ok("Solicitud registrada");
+    public ResponseEntity<String> registrarSolicitud(@RequestParam String correo,
+                                                     @RequestParam String descripcion,
+                                                     @RequestParam SolicitudAyuda.Prioridad prioridad) {
+        ayudaService.registrarSolicitud(correo, descripcion, prioridad);
+        return ResponseEntity.ok("Solicitud registrada con éxito");
     }
 
     @GetMapping("/atender")
     public ResponseEntity<SolicitudAyuda> atenderSolicitud() {
-        return ResponseEntity.ok(ayudaService.atenderSiguiente());
+        SolicitudAyuda solicitud = ayudaService.atenderSiguiente();
+        return (solicitud != null) ? ResponseEntity.ok(solicitud) : ResponseEntity.noContent().build();
     }
 
     @GetMapping("/listar")
     public ResponseEntity<List<SolicitudAyuda>> listarSolicitudes() {
-        return ResponseEntity.ok(ayudaService.listarSolicitudes());
+        return ResponseEntity.ok(ayudaService.listarSolicitudesOrdenadas());
     }
 }

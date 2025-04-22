@@ -6,7 +6,6 @@ import com.uniquindio.redsocial.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +17,11 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     public Usuario registrar(UsuarioDTO dto) {
+        Optional<Usuario> usuarioExistente = usuarioRepository.findByCorreo(dto.getCorreo());
+        if (usuarioExistente.isPresent()) {
+            throw new IllegalArgumentException("El correo ya está en uso por otro usuario.");
+        }
+
         Usuario usuario = new Usuario(
                 UUID.randomUUID().toString(),
                 dto.getNombre(),

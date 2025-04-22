@@ -5,6 +5,8 @@ import com.uniquindio.redsocial.service.ContenidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/contenido")
 public class ContenidoController {
@@ -20,5 +22,10 @@ public class ContenidoController {
             @RequestParam String tipo,
             @RequestParam String url) {
         return contenidoService.publicar(idUsuario, titulo, descripcion, tipo, url);
+    }
+
+    @GetMapping("/mas-valorados")
+    public List<Contenido> obtenerContenidosMasValorados() {
+        return contenidoService.obtenerContenidosMasValorados();
     }
 }

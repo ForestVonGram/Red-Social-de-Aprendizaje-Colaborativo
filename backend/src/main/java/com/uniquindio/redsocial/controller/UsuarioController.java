@@ -1,9 +1,13 @@
 package com.uniquindio.redsocial.controller;
 
 import com.uniquindio.redsocial.dto.UsuarioDTO;
+import com.uniquindio.redsocial.model.Usuario;
 import com.uniquindio.redsocial.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -25,6 +29,12 @@ public class UsuarioController {
         } else {
             return "Credenciales incorrectas";
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Usuario>> listarUsuarios() {
+        List<Usuario> usuarios = usuarioService.listarUsuarios();
+        return ResponseEntity.ok(usuarios);
     }
 }
 

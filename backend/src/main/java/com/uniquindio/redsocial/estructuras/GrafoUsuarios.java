@@ -148,4 +148,36 @@ public class GrafoUsuarios {
         }
         return conectados;
     }
+    public List<Set<Usuario>> detectarClusters() {
+        List<Set<Usuario>> clusters = new ArrayList<>();
+        Set<String> visitados = new HashSet<>();
+
+        for (String correo : usuarios.keySet()) {
+            if (!visitados.contains(correo)) {
+                Set<Usuario> cluster = new HashSet<>();
+                explorarCluster(correo, visitados, cluster);
+                clusters.add(cluster);
+            }
+        }
+
+        return clusters;
+    }
+
+    private void explorarCluster(String correo, Set<String> visitados, Set<Usuario> cluster) {
+        Queue<String> cola = new LinkedList<>();
+        cola.add(correo);
+        visitados.add(correo);
+
+        while (!cola.isEmpty()) {
+            String actual = cola.poll();
+            cluster.add(usuarios.get(actual));
+
+            for (String vecino : conexiones.getOrDefault(actual, new HashSet<>())) {
+                if (!visitados.contains(vecino)) {
+                    visitados.add(vecino);
+                    cola.add(vecino);
+                }
+            }
+        }
+    }
 }

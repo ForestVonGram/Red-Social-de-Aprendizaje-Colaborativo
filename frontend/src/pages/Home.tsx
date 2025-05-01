@@ -1,24 +1,47 @@
 import React from "react";
-import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
-import ContentSection from "@/components/ContentSection";
+import "@/styles/Home.css";
 
-export default function Home() {
+const Home: React.FC = () => {
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col">
-            <Navbar />
+        <html lang="es">
+        <head>
+            <meta charSet="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <title>NeuronApp</title>
+            <link rel="stylesheet" href="estilos.css"/>
+            <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
+        </head>
+        <body>
+        <div id="pantallainicio">
 
-            <main className="flex flex-1 px-4 py-6 gap-4">
-                {/* Sidebar lateral */}
-                <aside className="hidden md:block w-full md:w-1/4 lg:w-1/5">
-                    <Sidebar />
-                </aside>
+            <div id="rectangle"></div>
 
-                {/* Sección de contenidos */}
-                <section className="flex-1 w-full">
-                    <ContentSection />
-                </section>
-            </main>
+            <div id="acercade">Acerca de</div>
+            <div id="foro">Foro</div>
+            <div id="documentacion">Documentación</div>
+            <div id="iniciarsesion">Iniciar sesión</div>
+
+            <div id="fondo-inicio"></div>
+
+            <div id="titulo-neuronapp">NeuronApp</div>
+
+            <div id="descripcion-app">
+                Una red social para el aprendizaje colaborativo, impulsada por conexiones inteligentes.
+            </div>
+
+            <div id="--------------">Características</div>
+
+            <div id="rectangleCaracteristicas"></div>
+
+            <div id="intuitiva">Intuitiva</div>
+            <div id="rapida">Rápida</div>
+            <div id="recursiva">Recursiva</div>
+            <div id="polaniaelcacique">Polanía el Cacique</div>
+
         </div>
+        </body>
+        </html>
     );
-}
+};
+
+export default Home;

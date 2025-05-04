@@ -1,0 +1,301 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #000;
+}
+
+#scale-wrapper {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+#landing {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    z-index: 3;
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+#bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+
+#digital-planet-techn {
+    width: 100%;
+    height: 100%;
+    background: url('frontend/src/assets/digital-planet-technology-earth-shaped-with-blue-2025-01-09-12-21-40-utc.jpg') no-repeat center center;
+    background-size: cover;
+    transform: translateY(0);
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+    animation: fadeInBg 1.2s ease-out forwards;
+}
+
+#rectangle-bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    opacity: 0.4;
+    background: #000000;
+    z-index: 2;
+}
+
+#header {
+    position: relative;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 4;
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+    animation-delay: 0.2s;
+}
+
+.logo-container {
+    max-width: 434px;
+}
+
+#neuronapp {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(1.75rem, 4.5vw, 62px);
+    line-height: 1.5;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+#learninghappenstroug {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(0.75rem, 1.2vw, 1.25rem);
+    color: #ffffff;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 2rem;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    color: #ffffff;
+    margin-top: 0.5rem;
+}
+
+#login, #register {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(0.875rem, 1.5vw, 1.375rem);
+    color: #ffffff;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    text-decoration: none;
+}
+
+#login:hover, #register:hover {
+    opacity: 0.8;
+}
+
+#body {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 1359px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    text-align: center;
+    z-index: 4;
+    min-height: calc(100vh - 200px);
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+    animation-delay: 0.4s;
+}
+
+#thenetworkforendless {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(2.3rem, 5.7vw, 4.6rem);
+    line-height: 1.2;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    font-weight: 300;
+}
+
+#connectwithstudentsa {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(1.3rem, 2.7vw, 2.1rem);
+    color: #ffffff;
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+#webinputdefault {
+    width: 100%;
+    max-width: 848px;
+    height: 73px;
+    margin: 0 auto 1.5rem;
+    border-radius: 18px;
+    background: rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+#preferences-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: clamp(0.875rem, 1.3vw, 1.3rem);
+    font-family: 'Inter', sans-serif;
+    padding: 0 20px;
+}
+
+#preferences-input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+#preferences-input:focus {
+    outline: none;
+}
+
+#webbuttonprimarydefa {
+    width: 100%;
+    max-width: 234px;
+    height: 73px;
+    margin: 0 auto;
+    background: #ff007a;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    border: none;
+}
+
+#webbuttonprimarydefa:hover {
+    transform: scale(1.05);
+}
+
+#label {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1rem, 1.8vw, 1.575rem);
+    font-weight: normal;
+    color: #ffffff;
+}
+
+@media screen and (max-width: 768px) {
+    #header {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .logo-container {
+        text-align: center;
+    }
+
+    #body {
+        padding: 1rem;
+    }
+
+    #webinputdefault {
+        height: 60px;
+    }
+
+    #placeholder {
+        line-height: 60px;
+    }
+
+    .about-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+#about-section {
+    position: relative;
+    z-index: 4;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 6rem 2rem;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+    animation-delay: 0.6s;
+}
+
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.about-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 4rem;
+    font-weight: 300;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 0 1rem;
+}
+
+.about-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+    transition: transform 0.3s ease;
+}
+
+.about-card:hover {
+    transform: translateY(-5px);
+}
+
+.about-card h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    color: #ffffff;
+    margin-bottom: 1rem;
+    font-weight: 400;
+}
+
+.about-card p {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInBg {
+    from { opacity: 0; transform: scale(1.05); }
+    to { opacity: 1; transform: scale(1); }
+}

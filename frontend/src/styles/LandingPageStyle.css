@@ -41,7 +41,7 @@ html, body {
 #digital-planet-techn {
     width: 100%;
     height: 100%;
-    background: url('frontend/src/assets/digital-planet-technology-earth-shaped-with-blue-2025-01-09-12-21-40-utc.jpg') no-repeat center center;
+    background: url('../assets/digital-planet-technology-earth-shaped-with-blue-2025-01-09-12-21-40-utc.jpg') no-repeat center center;
     background-size: cover;
     transform: translateY(0);
     transition: transform 0.1s ease-out;

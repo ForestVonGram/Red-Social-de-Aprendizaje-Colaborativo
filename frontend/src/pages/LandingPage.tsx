@@ -1,7 +1,7 @@
 import React from "react";
 import '@/styles/LandingPageStyle.css';
 
-const Landing React.FC = () => {
+const Landing: React.FC = () => {
     return (
         <div id="scale-wrapper">
             <div id="bg">

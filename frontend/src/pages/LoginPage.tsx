@@ -1,5 +1,5 @@
 import React from "react";
-
+import "@/styles/LoginPageStyle.css";
 const Login: React.FC = () => {
     return (
         <div className="relative w-full min-h-screen bg-black flex justify-center items-center overflow-hidden">

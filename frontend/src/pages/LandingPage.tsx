@@ -16,8 +16,8 @@ const Landing: React.FC = () => {
                         <p id="learninghappenstroug">Where learning happens through connection</p>
                     </div>
                     <div className="auth-buttons">
-                        <a id="login" href="#">Login</a>
-                        <a id="register" href="#">Register</a>
+                        <a id="login" href="/LoginPage">Login</a>
+                        <a id="register" href="/RegisterPage">Register</a>
                     </div>
                 </header>
 

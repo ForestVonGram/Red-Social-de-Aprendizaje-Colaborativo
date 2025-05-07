@@ -1,0 +1,195 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+    overflow-x: hidden;
+}
+
+#register {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: #000000;
+    padding-bottom: 2rem; /* Añadir padding inferior */
+}
+
+#futuristic-light-wav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/Users/juancamilolopezfuentes/Documents/Universidad/Estructura de datos/Proyecto Final/UI/Proyecto Final/Material/bg.jpg') no-repeat center center;
+    background-size: cover;
+    z-index: 1;
+    animation: fadeInBg 1.2s ease-out forwards;
+}
+
+@keyframes fadeInBg {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+#titledev {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+    animation-delay: 0.2s; /* Pequeño retraso para efecto escalonado */
+}
+
+#neuronapp {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(3rem, 8vw, 132px);
+    color: #ffffff;
+    line-height: 1;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+}
+
+#path {
+    width: 80%;
+    max-width: 748px;
+    height: 3px;
+    background: #ffffff;
+    margin: 1.2rem auto 0.2rem;
+}
+
+#learninghappenstroug {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(1.2rem, 2vw, 31px);
+    color: #ffffff;
+    margin-top: 0;
+}
+
+#registerdev {
+    position: relative;
+    width: 90%;
+    max-width: 753px;
+    margin: 2rem auto 4rem; /* Aumentado el margen inferior */
+    z-index: 2;
+    opacity: 0; /* Iniciamos con opacidad 0 para la animación */
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#rectangle {
+    background: rgba(0,0,0,0.5);
+    border-radius: 36px;
+    padding: 3rem 2rem;
+    backdrop-filter: blur(10px);
+}
+
+.input-group {
+    margin-bottom: 2rem;
+}
+
+.input-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.input-field {
+    width: 100%;
+    height: 38px;
+    background: rgba(255,255,255,0.3);
+    border: none;
+    border-radius: 10px;
+    padding: 0 1rem;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+}
+
+.input-field::placeholder {
+    color: #bdbdbd;
+}
+
+.input-field:focus {
+    outline: none;
+    background: rgba(255,255,255,0.4);
+}
+
+#loginaccount {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+#alreadyhaveanaccount {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    color: #ffffff;
+    margin-bottom: 0.2rem;
+}
+
+.login-link {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    color: #ff007a;
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    display: block;
+    transition: opacity 0.3s ease;
+}
+
+.login-link:hover {
+    opacity: 0.8;
+}
+
+#webbuttonprimarydefa {
+    width: 190px;
+    height: 34px;
+    background: #ff007a;
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    margin: 0 auto;
+    display: block;
+}
+
+#webbuttonprimarydefa:hover {
+    transform: scale(1.05);
+}
+
+@media screen and (max-width: 768px) {
+    #registerdev {
+        width: 95%;
+    }
+
+    #rectangle {
+        padding: 2rem 1rem;
+    }
+}

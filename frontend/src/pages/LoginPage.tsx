@@ -65,7 +65,7 @@ const Login: React.FC = () => {
                             Don't have an account yet?
                         </p>
                         <a
-                            href="/registerPage"
+                            href="/RegisterPage"
                             className="block text-pink-500 font-poppins text-xs mb-6 hover:opacity-80 transition-opacity"
                         >
                             Create one now

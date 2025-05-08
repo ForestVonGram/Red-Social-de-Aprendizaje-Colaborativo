@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/LoginPageStyle.css";
 
 const Login: React.FC = () => {
     return (

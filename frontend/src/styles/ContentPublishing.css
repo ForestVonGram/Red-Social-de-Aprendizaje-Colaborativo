@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+
+    background-image: url('../assets/fondoContentPublish.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #ffffff;
+}
+
+/* Fondo animado removido */
+/* Cabecera */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.navbar a {
+    margin-left: 20px;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 400;
+    transition: opacity 0.3s;
+}
+
+.navbar a:hover {
+    opacity: 0.7;
+}
+
+/* Contenido principal */
+main {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.media-container {
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    background-color: #222;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+    transition: transform 0.3s ease;
+}
+
+.media-container:hover {
+    transform: scale(1.01);
+}
+
+.media-container video,
+.media-container img,
+.media-container iframe {
+    width: 100%;
+    display: block;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 10px 0;
+}
+
+.description {
+    font-size: 1rem;
+    margin: 10px auto;
+    width: 60%;
+    color: #dddddd;
+}
+
+.date {
+    font-size: 0.85rem;
+    color: #cccccc;
+    margin-top: 20px;
+}
+
+/* Animación suave de entrada */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+main, .media-container {
+    animation: fadeIn 1s ease-in-out;
+}

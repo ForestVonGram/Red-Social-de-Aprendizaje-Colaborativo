@@ -1,0 +1,178 @@
+/* Importa la fuente Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-image: url('../assets/fondoMessages.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #fff;
+    backdrop-filter: blur(8px);
+}
+
+
+header {
+    display: flex;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.chat-wrapper {
+    display: flex;
+    height: calc(100vh - 80px);
+    margin: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.85);
+}
+
+.sidebar {
+    width: 300px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-input {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.conversation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+}
+
+.conversation {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.conversation:hover,
+.conversation.active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.avatar {
+    background-color: #FF007A;
+    color: #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.conversation-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-area {
+    flex: 1;
+    background-color: rgba(10, 10, 31, 0.8);
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(8px);
+}
+
+.chat-header {
+    padding: 20px;
+    border-bottom: 1px solid #444;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.message {
+    max-width: 60%;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 12px;
+    position: relative;
+}
+
+.message.received {
+    background-color: rgba(255, 255, 255, 0.1);
+    align-self: flex-start;
+}
+
+.message.sent {
+    background-color: #FF007A;
+    align-self: flex-end;
+}
+
+.timestamp {
+    display: block;
+    font-size: 0.75rem;
+    color: #ccc;
+    margin-top: 5px;
+}
+
+.chat-input {
+    display: flex;
+    padding: 20px;
+    border-top: 1px solid #444;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.send-btn {
+    background-color: #FF007A;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-left: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    max-width: 60%;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 12px;
+    position: relative;
+    display: inline-block;
+    word-wrap: break-word;
+}

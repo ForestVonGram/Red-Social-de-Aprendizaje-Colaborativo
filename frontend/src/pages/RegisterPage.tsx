@@ -47,30 +47,51 @@ const RegisterPage: FC = () => {
                     <h2 className="input-label" style={{ textAlign: "center", marginBottom: "2rem" }}>
                         Register
                     </h2>
-                    <form onSubmit={handleSubmit}>
-                        <div className="input-group">
-                            <label className="input-label" htmlFor="name">Name</label>
-                            <input type="text" id="name" className="input-field" placeholder="Enter your name" />
-                        </div>
+                        <form onSubmit={handleSubmit}>
+                            <div className="input-group">
+                                <label className="input-label" htmlFor="nombre">Name</label>
+                                <input
+                                    type="text"
+                                    id="nombre"
+                                    className="input-field"
+                                    placeholder="Enter your name"
+                                    value={formData.nombre}
+                                    onChange={handleChange}
+                                />
+                            </div>
 
-                        <div className="input-group">
-                            <label className="input-label" htmlFor="email">Email</label>
-                            <input type="email" id="email" className="input-field" placeholder="Enter your email" />
-                        </div>
+                            <div className="input-group">
+                                <label className="input-label" htmlFor="correo">Email</label>
+                                <input
+                                    type="email"
+                                    id="correo"
+                                    className="input-field"
+                                    placeholder="Enter your email"
+                                    value={formData.correo}
+                                    onChange={handleChange}
+                                />
+                            </div>
 
-                        <div className="input-group">
-                            <label className="input-label" htmlFor="password">Password</label>
-                            <input type="password" id="password" className="input-field" placeholder="Enter your password" />
-                        </div>
+                            <div className="input-group">
+                                <label className="input-label" htmlFor="contrasenia">Password</label>
+                                <input
+                                    type="password"
+                                    id="contrasenia"
+                                    className="input-field"
+                                    placeholder="Enter your password"
+                                    value={formData.contrasenia}
+                                    onChange={handleChange}
+                                />
+                            </div>
 
-                        <div id="loginaccount">
-                            <p id="alreadyhaveanaccount">Already have an account?</p>
-                            <a href="/LoginPage" className="login-link">Log in</a>
-                            <button id="webbuttonprimarydefa">
-                                <span id="label">Register</span>
-                            </button>
-                        </div>
-                    </form>
+                            <div id="loginaccount">
+                                <p id="alreadyhaveanaccount">Already have an account?</p>
+                                <a href="/LoginPage" className="login-link">Log in</a>
+                                <button id="webbuttonprimarydefa">
+                                    <span id="label">Register</span>
+                                </button>
+                            </div>
+                        </form>
 
                     {mensaje && <p style={{ textAlign: "center", marginTop: "1rem" }}>{mensaje}</p>}
                 </div>

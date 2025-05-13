@@ -1,7 +1,12 @@
-import React from "react";
+import React, {useState} from "react";
+import axios from "axios";
 import "../styles/LoginPageStyle.css";
 
 const Login: React.FC = () => {
+    const [formData, setFormData] = useState({
+        correo : "",
+        password : "",
+    });
     return (
         <div className="relative w-full min-h-screen bg-black flex justify-center items-center overflow-hidden">
             {/* Fondo animado */}

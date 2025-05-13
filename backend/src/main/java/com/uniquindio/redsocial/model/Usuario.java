@@ -20,5 +20,8 @@ public class Usuario {
 
     @ElementCollection
     private List<String> intereses;
+
+    @ManyToMany(mappedBy = "participantes")
+    private List<Conversacion> conversaciones;
 }
 

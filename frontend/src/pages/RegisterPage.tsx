@@ -24,7 +24,7 @@ const RegisterPage: FC = () => {
                 contrasenia: formData.contrasenia
             };
 
-            const response = await axios.post('http://localhost:3000/api/usuarios/registro', payload);
+            const response = await axios.post('http://localhost:8080/usuarios/registro', payload);
             setMensaje(response.data);
         } catch (error: any) {
             setMensaje('Error al registrar el usuario');

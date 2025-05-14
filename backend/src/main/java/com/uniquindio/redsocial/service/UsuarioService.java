@@ -1,6 +1,6 @@
 package com.uniquindio.redsocial.service;
 
-import com.uniquindio.redsocial.dto.UsuarioDTO;
+import com.uniquindio.redsocial.dto.RegisterDTO;
 import com.uniquindio.redsocial.model.Usuario;
 import com.uniquindio.redsocial.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Usuario registrar(UsuarioDTO dto) {
+    public Usuario registrar(RegisterDTO dto) {
         Optional<Usuario> usuarioExistente = usuarioRepository.findByCorreo(dto.getCorreo());
         if (usuarioExistente.isPresent()) {
             throw new IllegalArgumentException("El correo ya está en uso por otro usuario.");
@@ -27,7 +27,8 @@ public class UsuarioService {
                 dto.getNombre(),
                 dto.getCorreo(),
                 dto.getContrasenia(),
-                dto.getIntereses()
+                dto.getIntereses(),
+                null
         );
         return usuarioRepository.save(usuario);
     }

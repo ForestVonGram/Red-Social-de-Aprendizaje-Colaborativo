@@ -24,4 +24,3 @@ public class Usuario {
     @ManyToMany(mappedBy = "participantes")
     private List<Conversacion> conversaciones;
 }
-

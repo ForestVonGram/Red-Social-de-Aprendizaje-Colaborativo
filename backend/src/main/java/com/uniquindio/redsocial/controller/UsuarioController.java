@@ -1,5 +1,6 @@
 package com.uniquindio.redsocial.controller;
 
+import com.uniquindio.redsocial.dto.RegisterDTO;
 import com.uniquindio.redsocial.dto.UsuarioDTO;
 import com.uniquindio.redsocial.model.Usuario;
 import com.uniquindio.redsocial.service.UsuarioService;
@@ -18,7 +19,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping("/registro")
-    public String registrar(@RequestBody UsuarioDTO dto) {
+    public String registrar(@RequestBody RegisterDTO dto) {
         usuarioService.registrar(dto);
         return "Usuario registrado correctamente";
     }
@@ -38,4 +39,3 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarios);
     }
 }
-

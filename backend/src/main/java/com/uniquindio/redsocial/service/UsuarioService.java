@@ -28,7 +28,7 @@ public class UsuarioService {
                 dto.getCorreo(),
                 dto.getContrasenia(),
                 dto.getIntereses(),
-                null
+                dto.getConversaciones()
         );
         return usuarioRepository.save(usuario);
     }

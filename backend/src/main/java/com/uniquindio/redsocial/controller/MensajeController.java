@@ -1,6 +1,7 @@
 package com.uniquindio.redsocial.controller;
 
 
+import com.uniquindio.redsocial.dto.MensajeDTO;
 import com.uniquindio.redsocial.model.Mensaje;
 import com.uniquindio.redsocial.service.MensajeService;
 import lombok.*;

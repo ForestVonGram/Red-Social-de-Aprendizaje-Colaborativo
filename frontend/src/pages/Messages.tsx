@@ -3,12 +3,12 @@ import axios from "axios";
 import "../styles/Messages.css";
 
 interface Usuario {
-    id: string;
+    id: number;
     nombre: string;
 }
 
 interface Conversacion {
-    id: string;
+    id: number;
     participantes: Usuario[];
 }
 
@@ -19,37 +19,42 @@ interface Mensaje {
     remitente: Usuario;
 }
 
+const obtenerUsuarioActualId = (): number | null => {
+    const id = localStorage.getItem("usuarioId");
+    return id ? Number(id) : null;
+};
+
 const Messages: React.FC = () => {
     const [conversaciones, setConversaciones] = useState<Conversacion[]>([]);
     const [mensajes, setMensajes] = useState<Mensaje[]>([]);
     const [conversacionSeleccionada, setConversacionSeleccionada] = useState<Conversacion | null>(null);
     const [nuevoMensaje, setNuevoMensaje] = useState("");
-
-    const usuarioActualId = "usuario1"; // reemplázalo con tu usuario autenticado
+    const usuarioActualId = obtenerUsuarioActualId();
 
     useEffect(() => {
-        // Aquí deberías hacer una petición para obtener conversaciones del usuario actual
-        axios.get(`/api/usuarios/${usuarioActualId}/conversaciones`)
+        if (!usuarioActualId) return;
+        axios
+            .get(`/usuarios/${usuarioActualId}/conversaciones`)
             .then(res => setConversaciones(res.data))
             .catch(err => console.error(err));
-    }, []);
+    }, [usuarioActualId]);
 
     const seleccionarConversacion = (conv: Conversacion) => {
         setConversacionSeleccionada(conv);
-
-        axios.get(`/api/mensajes/conversacion/${conv.id}`)
+        axios
+            .get(`/api/mensajes/conversacion/${conv.id}`)
             .then(res => setMensajes(res.data))
             .catch(err => console.error(err));
     };
 
     const enviarMensaje = () => {
-        if (!conversacionSeleccionada || !nuevoMensaje.trim()) return;
-
-        axios.post("/api/mensajes", {
-            remitenteId: usuarioActualId,
-            conversacionId: conversacionSeleccionada.id,
-            contenido: nuevoMensaje
-        })
+        if (!conversacionSeleccionada || !nuevoMensaje.trim() || !usuarioActualId) return;
+        axios
+            .post("/api/mensajes", {
+                remitenteId: usuarioActualId,
+                conversacionId: conversacionSeleccionada.id,
+                contenido: nuevoMensaje,
+            })
             .then(res => {
                 setMensajes([...mensajes, res.data]);
                 setNuevoMensaje("");
@@ -57,12 +62,19 @@ const Messages: React.FC = () => {
             .catch(err => console.error(err));
     };
 
+    if (!usuarioActualId) {
+        return (
+            <div className="no-auth">
+                <h2>Debes iniciar sesión para ver tus mensajes.</h2>
+            </div>
+        );
+    }
+
     return (
         <div>
             <header>
                 <div className="logo">NeuronApp</div>
             </header>
-
             <div className="chat-wrapper">
                 <aside className="sidebar">
                     <input type="text" placeholder="Buscar estudiante..." className="search-input" />
@@ -85,10 +97,13 @@ const Messages: React.FC = () => {
                         })}
                     </ul>
                 </aside>
-
                 <main className="chat-area">
                     <div className="chat-header">
-                        <h2>{conversacionSeleccionada ? conversacionSeleccionada.participantes.find(u => u.id !== usuarioActualId)?.nombre : "Selecciona un usuario"}</h2>
+                        <h2>
+                            {conversacionSeleccionada
+                                ? conversacionSeleccionada.participantes.find(u => u.id !== usuarioActualId)?.nombre
+                                : "Selecciona un usuario"}
+                        </h2>
                     </div>
                     <div className="chat-messages">
                         {mensajes.map(msg => (
@@ -106,9 +121,11 @@ const Messages: React.FC = () => {
                             type="text"
                             placeholder="Escribe tu mensaje..."
                             value={nuevoMensaje}
-                            onChange={(e) => setNuevoMensaje(e.target.value)}
+                            onChange={e => setNuevoMensaje(e.target.value)}
                         />
-                        <button className="send-btn" onClick={enviarMensaje}>Enviar</button>
+                        <button className="send-btn" onClick={enviarMensaje}>
+                            Enviar
+                        </button>
                     </div>
                 </main>
             </div>

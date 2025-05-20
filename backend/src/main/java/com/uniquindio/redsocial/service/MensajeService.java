@@ -19,7 +19,7 @@ public class MensajeService {
     private final ConversacionRepository conversacionRepo;
     private final UsuarioRepository usuarioRepo;
 
-    public Mensaje enviarMensaje(String remitenteId, Long conversacionId, String contenido) {
+    public Mensaje enviarMensaje(Long remitenteId, Long conversacionId, String contenido) {
         Usuario remitente = usuarioRepo.findById(remitenteId)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 

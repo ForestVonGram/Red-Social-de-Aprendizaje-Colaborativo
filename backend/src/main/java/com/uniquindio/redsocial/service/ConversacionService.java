@@ -18,7 +18,7 @@ public class ConversacionService {
     private final ConversacionRepository conversacionRepo;
     private final UsuarioRepository usuarioRepo;
 
-    public Conversacion crearConversacion(List<String> idsParticipantes) {
+    public Conversacion crearConversacion(List<Long> idsParticipantes) {
         List<Usuario> participantes = usuarioRepo.findAllById(idsParticipantes);
 
         if (participantes.size() < 2){
@@ -26,7 +26,6 @@ public class ConversacionService {
         }
 
         Conversacion conversacion = new Conversacion();
-        conversacion.setId(Long.valueOf(UUID.randomUUID().toString()));
         conversacion.setParticipantes(participantes);
 
         return conversacionRepo.save(conversacion);

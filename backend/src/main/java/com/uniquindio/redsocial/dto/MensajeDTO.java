@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class MensajeDTO {
-    private String remitenteId;
+    private Long remitenteId;
     private Long conversacionId;
     private String contenido;
 }

@@ -17,7 +17,7 @@ public class ConversacionController {
     private final ConversacionService conversacionService;
 
     @PostMapping
-    public ResponseEntity<Conversacion> crearConversacion(@RequestBody List<String> idsUsuarios){
+    public ResponseEntity<Conversacion> crearConversacion(@RequestBody List<Long> idsUsuarios){
         return ResponseEntity.ok(conversacionService.crearConversacion(idsUsuarios));
     }
 

@@ -1,194 +1,73 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    width: 100%;
+.login-container {
     min-height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
-    background: #000;
-    overflow-x: hidden;
+    justify-content: center;
 }
 
-#login {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-
+.login-form {
+    padding: 2.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-#futuristic-light-wav {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: url('../assets/bg.jpg') no-repeat center center;
-    background-size: cover;
-    z-index: 1;
-    animation: fadeInBg 1.2s ease-out forwards;
-}
-
-#titledev {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: fadeIn 0.8s ease-out forwards;
-    animation-delay: 0.2s;
-}
-
-#neuronapp {
-    font-family: 'Poppins', sans-serif;
-    font-size: clamp(3rem, 8vw, 132px);
-    color: #ffffff;
-    line-height: 1;
-    font-weight: 500;
-    margin-bottom: 0.2rem;
-}
-
-#path {
-    width: 80%;
-    max-width: 748px;
-    height: 3px;
-    background: #ffffff;
-    margin: 1.2rem auto 0.2rem;
-}
-
-#learninghappenstroug {
-    font-family: 'Poppins', sans-serif;
-    font-size: clamp(1.2rem, 2vw, 31px);
-    color: #ffffff;
-    margin-top: 0;
-}
-
-#logindev {
-    position: relative;
-    width: 90%;
-    max-width: 753px;
-    margin: 2rem auto 4rem;
-    z-index: 2;
-    opacity: 0;
-    animation: fadeIn 0.8s ease-out forwards;
-}
-
-#rectangle {
-    background: rgba(0,0,0,0.5);
-    border-radius: 36px;
-    padding: 3rem 2rem;
-    backdrop-filter: blur(10px);
-}
-
-.input-group {
-    margin-bottom: 2rem;
-}
-
-.input-label {
-    font-family: 'Poppins', sans-serif;
-    font-size: 22px;
-    color: #ffffff;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-.input-field {
-    width: 100%;
-    height: 38px;
-    background: rgba(255,255,255,0.3);
-    border: none;
-    border-radius: 10px;
-    padding: 0 1rem;
-    color: #ffffff;
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
-}
-
-.input-field::placeholder {
-    color: #bdbdbd;
-}
-
-.input-field:focus {
-    outline: none;
-    background: rgba(255,255,255,0.4);
-}
-
-#createaccount {
-    text-align: center;
-    margin-top: 2rem;
-}
-
-#donthaveanaccountyet {
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    color: #ffffff;
-    margin-bottom: 0.2rem;
-}
-
-.create-account-link {
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    color: #ff007a;
-    text-decoration: none;
+.login-title {
     margin-bottom: 1.5rem;
-    display: block;
-    transition: opacity 0.3s ease;
+    color: #2575fc;
+    font-weight: 700;
+    font-size: 1.7rem;
+    letter-spacing: 1px;
 }
 
-.create-account-link:hover {
-    opacity: 0.8;
+.login-input {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+    color: #222; /* <-- Añade esta línea */
+    background: #fff; /* Asegura fondo blanco */
 }
 
-#webbuttonprimarydefa {
-    width: 190px;
-    height: 34px;
-    background: #ff007a;
+.login-input:focus {
+    border: 1.5px solid #2575fc;
+}
+
+.login-button {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+    color: #fff;
     border: none;
-    border-radius: 4px;
-    color: #ffffff;
-    font-family: 'Poppins', sans-serif;
-    font-size: 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1.1rem;
     cursor: pointer;
-    transition: transform 0.3s ease;
-    margin: 0 auto;
-    display: block;
+    transition: background 0.2s;
 }
 
-#webbuttonprimarydefa:hover {
-    transform: scale(1.05);
+.login-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.login-error {
+    color: #e74c3c;
+    margin-top: 1rem;
+    font-weight: 500;
+    font-size: 1rem;
 }
 
-@keyframes fadeInBg {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    #logindev {
-        width: 95%;
-    }
-
-    #rectangle {
-        padding: 2rem 1rem;
-    }
+.login-loader {
+    margin-top: 1rem;
+    color: #2575fc;
+    font-weight: 500;
 }

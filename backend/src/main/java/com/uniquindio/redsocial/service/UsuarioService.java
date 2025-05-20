@@ -24,7 +24,7 @@ public class UsuarioService {
         }
 
         Usuario usuario = new Usuario(
-                dto.getId() != null ? dto.getId() : Long.valueOf(UUID.randomUUID().toString()),
+                null,
                 dto.getNombre(),
                 dto.getCorreo(),
                 dto.getContrasenia(),

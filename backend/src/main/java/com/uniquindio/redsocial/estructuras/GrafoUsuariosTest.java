@@ -13,8 +13,8 @@ public class GrafoUsuariosTest {
     @Test
     public void testAgregarYConectarUsuarios() {
         GrafoUsuarios grafo = new GrafoUsuarios();
-        Usuario u1 = new Usuario("1", "Ana", "ana@uq.edu.co", "123", List.of("IA"), null);
-        Usuario u2 = new Usuario("2", "Luis", "luis@uq.edu.co", "456", List.of("Redes"), null);
+        Usuario u1 = new Usuario(1L, "Ana", "ana@uq.edu.co", "123", List.of("IA"), null);
+        Usuario u2 = new Usuario(2L, "Luis", "luis@uq.edu.co", "456", List.of("Redes"), null);
 
         grafo.agregarUsuario(u1);
         grafo.agregarUsuario(u2);
@@ -26,8 +26,8 @@ public class GrafoUsuariosTest {
     @Test
     public void testEliminarConexion() {
         GrafoUsuarios grafo = new GrafoUsuarios();
-        Usuario u1 = new Usuario("1", "Ana", "ana@uq.edu.co", "123", List.of("IA"), null);
-        Usuario u2 = new Usuario("2", "Luis", "luis@uq.edu.co", "456", List.of("Redes"), null);
+        Usuario u1 = new Usuario(1L, "Ana", "ana@uq.edu.co", "123", List.of("IA"), null);
+        Usuario u2 = new Usuario(2L, "Luis", "luis@uq.edu.co", "456", List.of("Redes"), null);
 
         grafo.agregarUsuario(u1);
         grafo.agregarUsuario(u2);

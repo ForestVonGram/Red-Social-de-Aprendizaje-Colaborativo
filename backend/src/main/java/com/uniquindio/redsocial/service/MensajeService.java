@@ -19,7 +19,7 @@ public class MensajeService {
     private final ConversacionRepository conversacionRepo;
     private final UsuarioRepository usuarioRepo;
 
-    public Mensaje enviarMensaje(String remitenteId, String conversacionId, String contenido) {
+    public Mensaje enviarMensaje(String remitenteId, Long conversacionId, String contenido) {
         Usuario remitente = usuarioRepo.findById(remitenteId)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
@@ -39,7 +39,7 @@ public class MensajeService {
         return mensajeRepo.save(mensaje);
     }
 
-    public List<Mensaje> obtenerMensajesPorConversacion(String conversacionId) {
+    public List<Mensaje> obtenerMensajesPorConversacion(Long conversacionId) {
         Conversacion conversacion = conversacionRepo.findById(conversacionId)
                 .orElseThrow(() -> new IllegalArgumentException("Conversación no encontrada"));
         return mensajeRepo.findByConversacionOrderByFechaAsc(conversacion);

@@ -1,6 +1,7 @@
 package com.uniquindio.redsocial.service;
 
-import com.uniquindio.redsocial.dto.RegisterDTO;
+import com.uniquindio.redsocial.dto.UsuarioDTO;
+import com.uniquindio.redsocial.model.Conversacion;
 import com.uniquindio.redsocial.model.Usuario;
 import com.uniquindio.redsocial.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +17,14 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Usuario registrar(RegisterDTO dto) {
+    public Usuario registrar(UsuarioDTO dto) {
         Optional<Usuario> usuarioExistente = usuarioRepository.findByCorreo(dto.getCorreo());
         if (usuarioExistente.isPresent()) {
             throw new IllegalArgumentException("El correo ya está en uso por otro usuario.");
         }
 
         Usuario usuario = new Usuario(
-                UUID.randomUUID().toString(),
+                dto.getId() != null ? dto.getId() : Long.valueOf(UUID.randomUUID().toString()),
                 dto.getNombre(),
                 dto.getCorreo(),
                 dto.getContrasenia(),
@@ -49,5 +50,13 @@ public class UsuarioService {
 
     public List<Usuario> listarUsuarios() {
         return usuarioRepository.findAll();
+    }
+
+    public List<Conversacion> obtenerConversaciones(Long id) {
+        Optional<Usuario> usuario = usuarioRepository.findById(id);
+        if (usuario.isEmpty()) {
+            throw new IllegalArgumentException("Usuario no encontrado con el correo proporcionado.");
+        }
+        return usuario.get().getConversaciones();
     }
 }

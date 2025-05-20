@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, String> {
     Optional<Usuario> findByCorreo(String correo);
+    Optional<Usuario> findById(Long id);
 
     List<Usuario> findByNombreContainingIgnoreCase(String nombre);
 }

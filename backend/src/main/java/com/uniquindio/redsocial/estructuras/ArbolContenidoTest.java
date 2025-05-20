@@ -16,7 +16,7 @@ public class ArbolContenidoTest {
     public void testInsertarYBuscarContenido() {
         ArbolContenido arbol = new ArbolContenido();
 
-        Usuario autor = new Usuario("u1", "Laura", "laura@uq.edu.co", "abc123", List.of("IA"), null);
+        Usuario autor = new Usuario(1L, "Laura", "laura@uq.edu.co", "abc123", List.of("IA"), null);
 
         Contenido c1 = new Contenido(
                 "c1",

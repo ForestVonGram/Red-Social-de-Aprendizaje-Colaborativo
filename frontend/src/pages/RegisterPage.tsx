@@ -21,10 +21,12 @@ const RegisterPage: FC = () => {
             const payload = {
                 nombre: formData.nombre,
                 correo: formData.correo,
-                contrasenia: formData.contrasenia
+                contrasenia: formData.contrasenia,
+                intereses: [],
+                conversaciones: []
             };
 
-            const response = await axios.post('http://localhost:8080/usuarios/registro', payload);
+            const response = await axios.post('http://localhost:8080/api/register', payload);
             setMensaje(response.data);
         } catch (error: any) {
             setMensaje('Error al registrar el usuario');

@@ -21,15 +21,8 @@ public class LoginController {
     private UsuarioRepository usuarioRepository;
 
     @PostMapping
-    public String login(@RequestBody LoginDTO loginDTO) {
-        boolean autenticado = usuarioService.autenticar(loginDTO.getCorreo(), loginDTO.getPassword());
-
-        if (autenticado) {
-            // Puedes devolver información del usuario o un token más adelante
-            return "Login exitoso";
-        } else {
-            return "Correo o contraseña incorrectos";
-        }
+    public boolean login(@RequestBody LoginDTO loginDTO) {
+        return usuarioService.autenticar(loginDTO.getCorreo(), loginDTO.getPassword());
     }
 
     @GetMapping("/{correo}")

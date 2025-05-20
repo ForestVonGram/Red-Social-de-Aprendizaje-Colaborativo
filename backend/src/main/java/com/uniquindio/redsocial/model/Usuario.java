@@ -12,7 +12,7 @@ import java.util.List;
 public class Usuario {
 
     @Id
-    private String id;
+    private Long id;
 
     private String nombre;
     private String correo;

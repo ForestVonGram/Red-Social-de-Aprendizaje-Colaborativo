@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ConversacionRepository extends JpaRepository<Conversacion, String>{
+public interface ConversacionRepository extends JpaRepository<Conversacion, Long>{
     List<Conversacion> findByParticipantesContains(Usuario usuario);
 }

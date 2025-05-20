@@ -32,7 +32,7 @@ public class ConversacionService {
         return conversacionRepo.save(conversacion);
     }
 
-    public Optional<Conversacion> obtenerConversacion(String id){
+    public Optional<Conversacion> obtenerConversacion(Long id){
         return conversacionRepo.findById(id);
     }
 }

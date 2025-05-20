@@ -22,7 +22,7 @@ public class MensajeController {
     }
 
     @GetMapping("/conversacion/{id}")
-    public ResponseEntity<List<Mensaje>> obtenerMensajes(@PathVariable String id){
+    public ResponseEntity<List<Mensaje>> obtenerMensajes(@PathVariable Long id){
         return ResponseEntity.ok(mensajeService.obtenerMensajesPorConversacion(id));
     }
 }

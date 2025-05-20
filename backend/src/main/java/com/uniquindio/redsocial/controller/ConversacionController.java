@@ -22,7 +22,7 @@ public class ConversacionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Conversacion> obtenerConversacion(@PathVariable String id){
+    public ResponseEntity<Conversacion> obtenerConversacion(@PathVariable Long id){
         return conversacionService.obtenerConversacion(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

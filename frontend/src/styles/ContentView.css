@@ -1,0 +1,126 @@
+:root {
+    --primary-color: #FF007A;
+    --primary-hover: #e6006f;
+    --text-light: #ffffff;
+    --bg-dark: rgba(0, 0, 0, 0.8);
+    --font-main: 'Poppins', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    min-height: 100vh;
+}
+
+body{
+    position: relative;
+    margin: 0;
+    font-family: var(--font-main);
+    color: var(--text-light);
+    background-image: url('../assets/fondoContentView.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../assets/fondoContentView.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    filter: blur(8px); /* <-- este es el efecto de desenfoque */
+    z-index: -1; /* Va detrás del contenido */
+}
+
+
+/* Encabezado */
+header {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+/* Contenedor principal */
+.contenido-main {
+    max-width: 1000px;
+    margin: 50px auto;
+    background-color: var(--bg-dark);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.85);
+}
+
+/* Secciones */
+h1, h2 {
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.busqueda input[type="text"] {
+    font-family: var(--font-main);
+    padding: 10px;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.busqueda button {
+    padding: 10px 20px;
+    font-family: var(--font-main);
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.busqueda button:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Resultados */
+.resultado, .similares {
+    margin-top: 40px;
+}
+
+.contenido-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.contenido-card h3 {
+    margin-top: 0;
+    color: var(--text-light);
+}
+
+.contenido-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}

@@ -19,7 +19,7 @@ public class ArbolContenidoTest {
         Usuario autor = new Usuario(1L, "Laura", "laura@uq.edu.co", "abc123", List.of("IA"), null);
 
         Contenido c1 = new Contenido(
-                "c1",
+                1L,
                 "Introducción a Java",
                 "Curso básico de Java",
                 "VIDEO",
@@ -30,7 +30,7 @@ public class ArbolContenidoTest {
         );
 
         Contenido c2 = new Contenido(
-                "c2",
+                2L,
                 "Estructuras de Datos",
                 "Explicación de listas, colas y pilas",
                 "DOCUMENTO",

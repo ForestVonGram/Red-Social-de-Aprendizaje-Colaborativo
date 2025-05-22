@@ -22,6 +22,7 @@ public class LoginController {
 
     @PostMapping
     public boolean login(@RequestBody LoginDTO loginDTO) {
+        System.err.println("LoginController.login" + loginDTO.getPassword() + loginDTO.getCorreo());
         return usuarioService.autenticar(loginDTO.getCorreo(), loginDTO.getPassword());
     }
 

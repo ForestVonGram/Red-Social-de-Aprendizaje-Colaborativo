@@ -36,7 +36,6 @@ const RegisterPage: FC = () => {
 
     return (
         <div id="register">
-            <div id="futuristic-light-wav"></div>
 
             <div id="titledev">
                 <h1 id="neuronapp">NeuronApp</h1>
@@ -89,7 +88,7 @@ const RegisterPage: FC = () => {
                             <div id="loginaccount">
                                 <p id="alreadyhaveanaccount">Already have an account?</p>
                                 <a href="/LoginPage" className="login-link">Log in</a>
-                                <button id="webbuttonprimarydefa">
+                                <button id="webbuttonprimarydefa" type="submit">
                                     <span id="label">Register</span>
                                 </button>
                             </div>

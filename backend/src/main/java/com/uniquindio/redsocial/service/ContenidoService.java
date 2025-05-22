@@ -20,7 +20,7 @@ public class ContenidoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Contenido publicar(String idUsuario, String titulo, String descripcion, String tipo, String url) {
+    public Contenido publicar(Long idUsuario, String titulo, String descripcion, String tipo, String url) {
         Usuario autor = usuarioRepository.findById(idUsuario).orElseThrow();
         Contenido contenido = new Contenido(
                 UUID.randomUUID().toString(),

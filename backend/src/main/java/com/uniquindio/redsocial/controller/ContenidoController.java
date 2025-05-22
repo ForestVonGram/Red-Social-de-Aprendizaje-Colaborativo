@@ -16,7 +16,7 @@ public class ContenidoController {
 
     @PostMapping("/publicar")
     public Contenido publicar(
-            @RequestParam String idUsuario,
+            @RequestParam Long idUsuario,
             @RequestParam String titulo,
             @RequestParam String descripcion,
             @RequestParam String tipo,

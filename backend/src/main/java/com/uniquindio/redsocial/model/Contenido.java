@@ -14,7 +14,7 @@ import java.util.List;
 public class Contenido {
 
     @Id
-    private String id;
+    private Long id;
 
     private String titulo;
     private String descripcion;

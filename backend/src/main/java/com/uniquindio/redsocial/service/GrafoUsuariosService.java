@@ -1,6 +1,7 @@
 package com.uniquindio.redsocial.service;
 
 import com.uniquindio.redsocial.estructuras.GrafoUsuarios;
+import com.uniquindio.redsocial.estructuras.GrafoVisualizador;
 import com.uniquindio.redsocial.model.Usuario;
 import org.springframework.stereotype.Service;
 
@@ -83,5 +84,17 @@ public class GrafoUsuariosService {
             if (u2.getIntereses().contains(interes)) contador++;
         }
         return contador;
+    }
+
+    public void visualizarGrafo() {
+        GrafoVisualizador.mostrarGrafo(grafoUsuarios);
+    }
+
+    public Map<String, Set<String>> obtenerTodasLasConexiones() {
+        return grafoUsuarios.getConexiones();
+    }
+
+    public Collection<Usuario> obtenerTodosLosUsuarios() {
+        return grafoUsuarios.getUsuarios().values();
     }
 }

@@ -1,7 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 import "../styles/Profile.css"; // Asegúrate de que existe y está configurado
 
+interface UserProfile {
+    nombre: string;
+    rol: string;
+    intereses: string[];
+}
+
 const Profile: React.FC = () => {
+    const [profile, setProfile] = useState<UserProfile | null>(null);
+    const [activeTab, setActiveTab] = useState("publicaciones");
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const response = await axios.get("/api/usuario/perfil");
+                setProfile(response.data);
+            } catch (error) {
+                console.error("Error al cargar el perfil:", error);
+            }
+        };
+        fetchProfile();
+    }, []);
 return (
 <div>
     {/* Fondo de imagen */}

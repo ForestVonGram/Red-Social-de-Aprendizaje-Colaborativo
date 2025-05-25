@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import "../styles/Messages.css";
 
@@ -19,53 +19,95 @@ interface Mensaje {
     remitente: Usuario;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
 const obtenerUsuarioActualId = (): number | null => {
     const id = localStorage.getItem("usuarioId");
     return id ? Number(id) : null;
 };
 
 const Messages: React.FC = () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [conversaciones, setConversaciones] = useState<Conversacion[]>([]);
     const [mensajes, setMensajes] = useState<Mensaje[]>([]);
     const [conversacionSeleccionada, setConversacionSeleccionada] = useState<Conversacion | null>(null);
     const [nuevoMensaje, setNuevoMensaje] = useState("");
     const usuarioActualId = obtenerUsuarioActualId();
 
-    useEffect(() => {
+    const fetchConversaciones = useCallback(async () => {
         if (!usuarioActualId) return;
-        axios
-            .get(`/usuarios/${usuarioActualId}/conversaciones`)
-            .then(res => setConversaciones(res.data))
-            .catch(err => console.error(err));
+        try {
+            setIsLoading(true);
+            const response = await axios.get(`${API_BASE_URL}/usuarios/${usuarioActualId}/conversaciones`);
+            setConversaciones(response.data);
+        } catch (err) {
+            setError('Error al cargar las conversaciones');
+            console.error('Error:', err);
+        } finally {
+            setIsLoading(false);
+        }
     }, [usuarioActualId]);
 
-    const seleccionarConversacion = (conv: Conversacion) => {
+    useEffect(() => {
+        fetchConversaciones();
+    }, [fetchConversaciones]);
+
+    const seleccionarConversacion = async (conv: Conversacion) => {
         setConversacionSeleccionada(conv);
-        axios
-            .get(`/api/mensajes/conversacion/${conv.id}`)
-            .then(res => setMensajes(res.data))
-            .catch(err => console.error(err));
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/mensajes/conversacion/${conv.id}`);
+            setMensajes(response.data);
+        } catch (err) {
+            setError('Error al cargar los mensajes');
+            console.error('Error:', err);
+        }
     };
 
-    const enviarMensaje = () => {
+    const enviarMensaje = async () => {
         if (!conversacionSeleccionada || !nuevoMensaje.trim() || !usuarioActualId) return;
-        axios
-            .post("/api/mensajes", {
+
+        try {
+            const response = await axios.post(`${API_BASE_URL}/api/mensajes`, {
                 remitenteId: usuarioActualId,
                 conversacionId: conversacionSeleccionada.id,
-                contenido: nuevoMensaje,
-            })
-            .then(res => {
-                setMensajes([...mensajes, res.data]);
-                setNuevoMensaje("");
-            })
-            .catch(err => console.error(err));
+                contenido: nuevoMensaje.trim(),
+            });
+            setMensajes(prevMensajes => [...prevMensajes, response.data]);
+            setNuevoMensaje("");
+        } catch (err) {
+            setError('Error al enviar el mensaje');
+            console.error('Error:', err);
+        }
+    };
+
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            enviarMensaje();
+        }
     };
 
     if (!usuarioActualId) {
         return (
             <div className="no-auth">
                 <h2>Debes iniciar sesión para ver tus mensajes.</h2>
+                <a href="/login" className="login-link">Iniciar sesión</a>
+            </div>
+        );
+    }
+
+    if (isLoading) {
+        return <div className="loading">Cargando conversaciones...</div>;
+    }
+
+    if (error) {
+        return (
+            <div className="error-message">
+                {error}
+                <button onClick={fetchConversaciones} className="retry-button">
+                    Reintentar
+                </button>
             </div>
         );
     }
@@ -77,7 +119,12 @@ const Messages: React.FC = () => {
             </header>
             <div className="chat-wrapper">
                 <aside className="sidebar">
-                    <input type="text" placeholder="Buscar estudiante..." className="search-input" />
+                    <input
+                        type="text"
+                        placeholder="Buscar estudiante..."
+                        className="search-input"
+                        aria-label="Buscar estudiante"
+                    />
                     <ul className="conversation-list">
                         {conversaciones.map(conv => {
                             const nombre = conv.participantes.find(u => u.id !== usuarioActualId)?.nombre ?? "Chat";
@@ -86,8 +133,12 @@ const Messages: React.FC = () => {
                                     key={conv.id}
                                     className={`conversation ${conversacionSeleccionada?.id === conv.id ? "active" : ""}`}
                                     onClick={() => seleccionarConversacion(conv)}
+                                    role="button"
+                                    tabIndex={0}
                                 >
-                                    <div className="avatar">{nombre.slice(0, 2).toUpperCase()}</div>
+                                    <div className="avatar" aria-hidden="true">
+                                        {nombre.slice(0, 2).toUpperCase()}
+                                    </div>
                                     <div className="conversation-info">
                                         <strong>{nombre}</strong>
                                         <span>Conversación activa</span>
@@ -122,8 +173,14 @@ const Messages: React.FC = () => {
                             placeholder="Escribe tu mensaje..."
                             value={nuevoMensaje}
                             onChange={e => setNuevoMensaje(e.target.value)}
+                            onKeyPress={handleKeyPress}
+                            disabled={!conversacionSeleccionada}
                         />
-                        <button className="send-btn" onClick={enviarMensaje}>
+                        <button
+                            className="send-btn"
+                            onClick={enviarMensaje}
+                            disabled={!conversacionSeleccionada || !nuevoMensaje.trim()}
+                        >
                             Enviar
                         </button>
                     </div>

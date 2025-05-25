@@ -113,3 +113,43 @@ ol {
 ol li {
     margin-bottom: 10px;
 }
+
+.graph-container {
+    width: 800px;
+    height: 400px;
+    border: 1px solid #ccc;
+    margin: 20px auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.graph-container svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Estilos adicionales para los elementos del grafo */
+.graph-container circle {
+    cursor: pointer;
+    transition: r 0.2s ease-in-out;
+}
+
+.graph-container circle:hover {
+    r: 8;
+}
+
+.graph-container text {
+    pointer-events: none;
+    fill: #333;
+    font-family: Arial, sans-serif;
+}
+
+.graph-container line {
+    stroke-opacity: 0.6;
+    transition: stroke-width 0.2s ease-in-out;
+}
+
+.graph-container line:hover {
+    stroke-width: 2;
+}

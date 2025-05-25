@@ -1,5 +1,89 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import * as d3 from "d3";
+import axios from "axios";
 import "../styles/ModeratorPanel.css";
+
+const GrafoVisualizacion: React.FC = () => {
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    const cargarGrafo = async () => {
+      try {
+        const response = await axios.get('/api/grafo/estructura');
+        const data = response.data;
+
+        if (!svgRef.current) return;
+
+        const width = 800;
+        const height = 400;
+
+        d3.select(svgRef.current).selectAll("*").remove();
+
+        const svg = d3.select(svgRef.current)
+            .attr("width", width)
+            .attr("height", height);
+
+        const simulation = d3.forceSimulation(data.nodes)
+            .force("link", d3.forceLink(data.links).id((d: any) => d.id))
+            .force("charge", d3.forceManyBody().strength(-100))
+            .force("center", d3.forceCenter(width / 2, height / 2));
+
+        const links = svg.append("g")
+            .selectAll("line")
+            .data(data.links)
+            .enter()
+            .append("line")
+            .style("stroke", "#999")
+            .style("stroke-width", 1);
+
+        const nodes = svg.append("g")
+            .selectAll("circle")
+            .data(data.nodes)
+            .enter()
+            .append("circle")
+            .attr("r", 5)
+            .style("fill", "#1f77b4");
+
+        const labels = svg.append("g")
+            .selectAll("text")
+            .data(data.nodes)
+            .enter()
+            .append("text")
+            .text((d: any) => d.label)
+            .attr("font-size", "12px")
+            .attr("dx", 8)
+            .attr("dy", 3);
+
+        simulation.on("tick", () => {
+          links
+              .attr("x1", (d: any) => d.source.x)
+              .attr("y1", (d: any) => d.source.y)
+              .attr("x2", (d: any) => d.target.x)
+              .attr("y2", (d: any) => d.target.y);
+
+          nodes
+              .attr("cx", (d: any) => d.x)
+              .attr("cy", (d: any) => d.y);
+
+          labels
+              .attr("x", (d: any) => d.x)
+              .attr("y", (d: any) => d.y);
+        });
+      } catch (error) {
+        console.error('Error al cargar el grafo:', error);
+      }
+    };
+
+    cargarGrafo();
+  }, []);
+
+  return (
+      <div className="graph-container">
+        <svg ref={svgRef}></svg>
+      </div>
+  );
+};
+
 
 const ModeratorPanel: React.FC = () => (
   <div>
@@ -63,7 +147,7 @@ const ModeratorPanel: React.FC = () => (
       <section className="panel-section">
         <h2>Visualización del Grafo de Afinidad</h2>
         <div className="graph-container">
-          <canvas id="affinityGraph" width={800} height={400}></canvas>
+          <GrafoVisualizacion />
         </div>
       </section>
 

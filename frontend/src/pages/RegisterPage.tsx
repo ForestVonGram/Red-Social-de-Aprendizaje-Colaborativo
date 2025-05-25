@@ -1,8 +1,12 @@
+/// <reference types="vite/client" />
 import {FC, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/RegisterPageStyle.css';
 
 const RegisterPage: FC = () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         nombre: '',
         correo: '',
@@ -11,26 +15,41 @@ const RegisterPage: FC = () => {
 
     const [mensaje, setMensaje] = useState('');
 
+    const validarFormulario = () => {
+        if (!formData.nombre.trim()) return "El nombre es requerido";
+        if (!formData.correo.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return "Email inválido";
+        if (formData.contrasenia.length < 6) return "La contraseña debe tener al menos 6 caracteres";
+        return null;
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try {
-            const payload = {
-                nombre: formData.nombre,
-                correo: formData.correo,
-                contrasenia: formData.contrasenia,
-                intereses: [],
-                conversaciones: []
-            };
+        const error = validarFormulario();
+        if (error) {
+            setMensaje(error);
+            return;
+        }
 
-            const response = await axios.post('http://localhost:8080/api/register', payload);
-            setMensaje(response.data);
+        const payload = {
+            nombre: formData.nombre,
+            correo: formData.correo,
+            contrasenia: formData.contrasenia,
+            intereses: [],
+            conversaciones: []
+        };
+
+        setIsLoading(true);
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/register`, payload);
+            navigate('/login', { state: { message: 'Registro exitoso' } });
         } catch (error: any) {
-            setMensaje('Error al registrar el usuario');
-            console.error(error);
+            setMensaje(error.response?.data?.message || 'Error al registrar el usuario');
+        } finally {
+            setIsLoading(false);
         }
     };
 

@@ -1,9 +1,13 @@
 package com.uniquindio.redsocial.estructuras;
 
 import com.uniquindio.redsocial.model.Usuario;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
 
 import java.util.*;
 
+@Getter
 public class GrafoUsuarios {
     private final Map<String, Usuario> usuarios = new HashMap<>();
     private final Map<String, Set<String>> conexiones = new HashMap<>();
@@ -33,14 +37,6 @@ public class GrafoUsuarios {
 
     public boolean estanConectados(String correo1, String correo2) {
         return conexiones.getOrDefault(correo1, new HashSet<>()).contains(correo2);
-    }
-
-    public Map<String, Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public Map<String, Set<String>> getConexiones() {
-        return conexiones;
     }
 
     public Set<Usuario> obtenerAmigos(String correo) {
@@ -179,5 +175,81 @@ public class GrafoUsuarios {
                 }
             }
         }
+    }
+
+    public boolean verificarIntegridad() {
+        try {
+            // 1. Verificar que todos los usuarios en conexiones existan en el mapa de usuarios
+            for (String correo : conexiones.keySet()) {
+                if (!usuarios.containsKey(correo)) {
+                    return false;
+                }
+            }
+
+            // 2. Verificar que todos los usuarios tengan su entrada en el mapa de conexiones
+            for (String correo : usuarios.keySet()) {
+                if (!conexiones.containsKey(correo)) {
+                    return false;
+                }
+            }
+
+            // 3. Verificar que las conexiones sean bidireccionales
+            for (Map.Entry<String, Set<String>> entry : conexiones.entrySet()) {
+                String correo1 = entry.getKey();
+                for (String correo2 : entry.getValue()) {
+                    // Verificar que el usuario conectado existe
+                    if (!usuarios.containsKey(correo2)) {
+                        return false;
+                    }
+                    // Verificar que la conexión es bidireccional
+                    if (!conexiones.get(correo2).contains(correo1)) {
+                        return false;
+                    }
+                }
+            }
+
+            // 4. Verificar que no haya auto-conexiones
+            for (Map.Entry<String, Set<String>> entry : conexiones.entrySet()) {
+                if (entry.getValue().contains(entry.getKey())) {
+                    return false;
+                }
+            }
+
+            // 5. Verificar que no haya usuarios null o conexiones null
+            if (usuarios.containsKey(null) || usuarios.containsValue(null) ||
+                    conexiones.containsKey(null) || conexiones.containsValue(null)) {
+                return false;
+            }
+
+            // 6. Verificar que no haya correos vacíos
+            for (String correo : usuarios.keySet()) {
+                if (correo == null || correo.trim().isEmpty()) {
+                    return false;
+                }
+            }
+
+            // 7. Verificar que cada usuario tenga un objeto Usuario válido
+            for (Usuario usuario : usuarios.values()) {
+                if (usuario == null || usuario.getCorreo() == null ||
+                        !usuario.getCorreo().equals(usuarios.get(usuario.getCorreo()).getCorreo())) {
+                    return false;
+                }
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            // Si ocurre cualquier excepción durante la verificación, consideramos que el grafo no es íntegro
+            return false;
+        }
+    }
+
+    @Builder
+    @Data
+    public static class GrafoConfig {
+        private int maxNodos;
+        private int maxConexionesPorUsuario;
+        private int tiempoExpiracionCache;
+        private boolean habilitarVisualizacion;
     }
 }

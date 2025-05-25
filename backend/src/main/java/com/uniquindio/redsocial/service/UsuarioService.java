@@ -58,4 +58,11 @@ public class UsuarioService {
         }
         return usuario.get().getConversaciones();
     }
+
+    public Optional<Usuario> buscarPorCorreo(String correo) {
+        if (correo == null || correo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El correo es requerido");
+        }
+        return usuarioRepository.findByCorreo(correo);
+    }
 }

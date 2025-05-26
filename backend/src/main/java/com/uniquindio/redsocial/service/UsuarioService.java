@@ -65,4 +65,11 @@ public class UsuarioService {
         }
         return usuarioRepository.findByCorreo(correo);
     }
+
+    public boolean verificarCorreoDisponible(String correo) {
+        if (correo == null || correo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El correo es requerido");
+        }
+        return buscarPorCorreo(correo).isEmpty();
+    }
 }

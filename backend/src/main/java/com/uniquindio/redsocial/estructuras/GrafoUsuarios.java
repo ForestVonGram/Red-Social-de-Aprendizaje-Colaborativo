@@ -4,9 +4,11 @@ import com.uniquindio.redsocial.model.Usuario;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+@Component
 @Getter
 public class GrafoUsuarios {
     private final Map<String, Usuario> usuarios = new HashMap<>();
@@ -19,6 +21,19 @@ public class GrafoUsuarios {
     public void agregarUsuario(Usuario usuario) {
         usuarios.putIfAbsent(usuario.getCorreo(), usuario);
         conexiones.putIfAbsent(usuario.getCorreo(), new HashSet<>());
+    }
+
+    public void eliminarUsuario(String correo) {
+        if (usuarios.containsKey(correo)) {
+            Set<String> conexionesUsuario = conexiones.get(correo);
+            if (conexionesUsuario != null) {
+                for (String conexion : new HashSet<>(conexionesUsuario)) {
+                    eliminarConexion(correo, conexion);
+                }
+            }
+            usuarios.remove(correo);
+            conexiones.remove(correo);
+        }
     }
 
     public void conectarUsuarios(String correo1, String correo2) {

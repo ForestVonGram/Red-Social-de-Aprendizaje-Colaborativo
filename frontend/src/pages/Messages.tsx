@@ -26,6 +26,10 @@ const obtenerUsuarioActualId = (): number | null => {
     return id ? Number(id) : null;
 };
 
+const obtenerUsuarioActualEmail = (): string | null => {
+    return localStorage.getItem("userEmail");
+};
+
 const Messages: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -34,12 +38,13 @@ const Messages: React.FC = () => {
     const [conversacionSeleccionada, setConversacionSeleccionada] = useState<Conversacion | null>(null);
     const [nuevoMensaje, setNuevoMensaje] = useState("");
     const usuarioActualId = obtenerUsuarioActualId();
+    const usuarioActualEmail = obtenerUsuarioActualEmail();
 
     const fetchConversaciones = useCallback(async () => {
-        if (!usuarioActualId) return;
+        if (!usuarioActualEmail) return;
         try {
             setIsLoading(true);
-            const response = await axios.get(`${API_BASE_URL}/usuarios/${usuarioActualId}/conversaciones`);
+            const response = await axios.get(`${API_BASE_URL}/api/usuarios/${usuarioActualEmail}/conversaciones`);
             setConversaciones(response.data);
         } catch (err) {
             setError('Error al cargar las conversaciones');
@@ -47,7 +52,7 @@ const Messages: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [usuarioActualId]);
+    }, [usuarioActualEmail]);
 
     useEffect(() => {
         fetchConversaciones();
@@ -92,7 +97,7 @@ const Messages: React.FC = () => {
         return (
             <div className="no-auth">
                 <h2>Debes iniciar sesión para ver tus mensajes.</h2>
-                <a href="/login" className="login-link">Iniciar sesión</a>
+                <a href="/LoginPage" className="login-link">Iniciar sesión</a>
             </div>
         );
     }

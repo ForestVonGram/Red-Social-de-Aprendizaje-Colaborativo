@@ -38,16 +38,15 @@ const RegisterPage: FC = () => {
             nombre: formData.nombre,
             correo: formData.correo,
             contrasenia: formData.contrasenia,
-            intereses: [],
-            conversaciones: []
+            intereses: []
         };
 
         setIsLoading(true);
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/register`, payload);
-            navigate('/login', { state: { message: 'Registro exitoso' } });
+            navigate('/LoginPage', { state: { message: 'Registro exitoso' } });
         } catch (error: any) {
-            setMensaje(error.response?.data?.message || 'Error al registrar el usuario');
+            setMensaje(error.response?.data?.mensaje || 'Error al registrar el usuario');
         } finally {
             setIsLoading(false);
         }

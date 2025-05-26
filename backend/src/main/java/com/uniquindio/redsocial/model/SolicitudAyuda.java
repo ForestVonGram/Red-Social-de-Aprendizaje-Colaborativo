@@ -1,16 +1,23 @@
 package com.uniquindio.redsocial.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String descripcion;
     private String correoEstudiante;
+
+    @Enumerated(EnumType.STRING)
     private Prioridad prioridad;
 
     public enum Prioridad {

@@ -13,20 +13,20 @@ const LoginPage: React.FC = () => {
         setError("");
         setLoading(true);
         try {
-            const loginRes = await axios.post("/api/login", { correo, password });
-            if (loginRes.data === true) {
-                const userRes = await axios.get(`/api/login/${correo}`);
-                if (userRes.data && userRes.data.id) {
-                    localStorage.setItem("usuarioId", userRes.data.id);
+            const loginRes = await axios.post(`${import.meta.env.VITE_API_URL}/api/login`, { correo, password });
+            if (loginRes.data.exitoso) {
+                if (loginRes.data.usuario && loginRes.data.usuario.id) {
+                    localStorage.setItem("usuarioId", loginRes.data.usuario.id);
+                    localStorage.setItem("userEmail", correo);
                     window.location.href = "/Messages";
                 } else {
                     setError("No se pudo obtener el usuario.");
                 }
             } else {
-                setError("Credenciales incorrectas.");
+                setError(loginRes.data.mensaje || "Credenciales incorrectas.");
             }
-        } catch (err) {
-            setError("Error al iniciar sesión.");
+        } catch (err: any) {
+            setError(err.response?.data?.mensaje || "Error al iniciar sesión.");
         }
         setLoading(false);
     };

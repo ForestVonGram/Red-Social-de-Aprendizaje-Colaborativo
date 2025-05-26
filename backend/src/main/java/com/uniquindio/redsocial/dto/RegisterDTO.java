@@ -2,6 +2,7 @@ package com.uniquindio.redsocial.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.uniquindio.redsocial.model.Conversacion;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -53,6 +54,9 @@ public class RegisterDTO {
     private List<@NotBlank(message = "Los intereses no pueden estar vacíos")
     @Size(min = 2, max = 50, message = "Cada interés debe tener entre 2 y 50 caracteres")
             String> intereses = new ArrayList<>();
+
+    @JsonIgnore
+    private List<Conversacion> conversaciones = new ArrayList<>();
 
     public RegisterDTO(String nombre, String correo, String contrasenia) {
         this.nombre = nombre;

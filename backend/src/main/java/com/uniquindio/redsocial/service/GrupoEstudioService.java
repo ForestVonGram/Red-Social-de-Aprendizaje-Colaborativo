@@ -3,6 +3,7 @@ package com.uniquindio.redsocial.service;
 import com.uniquindio.redsocial.estructuras.GrafoUsuarios;
 import com.uniquindio.redsocial.model.GrupoEstudio;
 import com.uniquindio.redsocial.model.Usuario;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -10,7 +11,9 @@ import java.util.*;
 @Service
 public class GrupoEstudioService {
     private final GrafoUsuarios grafoUsuarios = new GrafoUsuarios();
-    private final Map<String, Usuario> usuarios = new HashMap<>();
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     /**
      * Registra un usuario en el sistema para participar en grupos de estudio.
@@ -25,11 +28,28 @@ public class GrupoEstudioService {
         if (usuario.getCorreo() == null || usuario.getCorreo().trim().isEmpty()) {
             throw new IllegalArgumentException("El correo del usuario no puede estar vacío");
         }
-        if (usuarios.containsKey(usuario.getCorreo())) {
+
+        // Verificar si el usuario ya existe
+        if (usuarioService.buscarPorCorreo(usuario.getCorreo()).isPresent()) {
             throw new IllegalStateException("El usuario con correo " + usuario.getCorreo() + " ya está registrado");
         }
 
-        usuarios.put(usuario.getCorreo(), usuario);
+        // Registrar el usuario usando UsuarioService
+        com.uniquindio.redsocial.dto.RegisterDTO dto = new com.uniquindio.redsocial.dto.RegisterDTO(
+            usuario.getNombre(), 
+            usuario.getCorreo(), 
+            usuario.getContrasenia()
+        );
+
+        // Agregar intereses
+        if (usuario.getIntereses() != null) {
+            for (String interes : usuario.getIntereses()) {
+                dto.agregarInteres(interes);
+            }
+        }
+
+        usuarioService.registrar(dto);
+
         grafoUsuarios.agregarUsuario(usuario);
     }
 
@@ -43,11 +63,14 @@ public class GrupoEstudioService {
         if (correo == null || correo.trim().isEmpty()) {
             throw new IllegalArgumentException("El correo no puede estar vacío");
         }
-        if (!usuarios.containsKey(correo)) {
+
+        // Verificar si el usuario existe
+        if (usuarioService.buscarPorCorreo(correo).isEmpty()) {
             throw new IllegalStateException("El usuario con correo " + correo + " no está registrado");
         }
 
-        usuarios.remove(correo);
+        // Eliminar el usuario usando UsuarioService
+        usuarioService.eliminarUsuario(correo);
         grafoUsuarios.eliminarUsuario(correo);
     }
 
@@ -62,10 +85,12 @@ public class GrupoEstudioService {
         if (correo1 == null || correo1.trim().isEmpty() || correo2 == null || correo2.trim().isEmpty()) {
             throw new IllegalArgumentException("Los correos no pueden estar vacíos");
         }
-        if (!usuarios.containsKey(correo1)) {
+
+        // Verificar si los usuarios existen
+        if (usuarioService.buscarPorCorreo(correo1).isEmpty()) {
             throw new IllegalStateException("El usuario con correo " + correo1 + " no está registrado");
         }
-        if (!usuarios.containsKey(correo2)) {
+        if (usuarioService.buscarPorCorreo(correo2).isEmpty()) {
             throw new IllegalStateException("El usuario con correo " + correo2 + " no está registrado");
         }
 
@@ -77,14 +102,15 @@ public class GrupoEstudioService {
      * @return Lista de grupos de estudio formados
      */
     public List<GrupoEstudio> formarGruposPorIntereses() {
-        if (usuarios.isEmpty()) {
+        List<Usuario> todosUsuarios = usuarioService.listarUsuarios();
+        if (todosUsuarios.isEmpty()) {
             return Collections.emptyList();
         }
 
         Set<String> procesados = new HashSet<>();
         List<GrupoEstudio> grupos = new ArrayList<>();
 
-        for (Usuario usuario : usuarios.values()) {
+        for (Usuario usuario : todosUsuarios) {
             if (procesados.contains(usuario.getCorreo())) continue;
 
             Set<Usuario> relacionados = grafoUsuarios.obtenerAmigos(usuario.getCorreo());
@@ -188,7 +214,7 @@ public class GrupoEstudioService {
      * @return Lista de todos los usuarios
      */
     public List<Usuario> obtenerTodosLosUsuarios() {
-        return new ArrayList<>(usuarios.values());
+        return usuarioService.listarUsuarios();
     }
 
     /**
@@ -203,11 +229,11 @@ public class GrupoEstudioService {
             throw new IllegalArgumentException("El correo no puede estar vacío");
         }
 
-        Usuario usuario = usuarios.get(correo);
-        if (usuario == null) {
+        Optional<Usuario> usuarioOpt = usuarioService.buscarPorCorreo(correo);
+        if (usuarioOpt.isEmpty()) {
             throw new IllegalStateException("El usuario con correo " + correo + " no está registrado");
         }
 
-        return usuario;
+        return usuarioOpt.get();
     }
 }

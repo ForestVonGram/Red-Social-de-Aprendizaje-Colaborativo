@@ -12,10 +12,24 @@ public class ColaPrioridadSolicitudes {
     private final PriorityQueue<Solicitud> cola = new PriorityQueue<>();
 
     public void agregarSolicitud(Solicitud solicitud) {
+        if (solicitud == null) {
+            throw new IllegalArgumentException("La solicitud no puede ser nula");
+        }
         cola.offer(solicitud);
     }
 
     public Solicitud atenderSolicitud() {
+        if (cola.isEmpty()) {
+            return null;
+        }
         return cola.poll();
+    }
+
+    public boolean estaVacia() {
+        return cola.isEmpty();
+    }
+
+    public int getTamanio() {
+        return cola.size();
     }
 }

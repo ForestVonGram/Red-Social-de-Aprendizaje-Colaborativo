@@ -43,6 +43,8 @@ public class GrupoEstudioController {
                 return ResponseEntity.noContent().build();
             }
             return ResponseEntity.ok(grupos);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error al formar los grupos de estudio", e);
@@ -96,6 +98,77 @@ public class GrupoEstudioController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error al conectar usuarios", e);
+        }
+    }
+
+    @Operation(summary = "Obtener todos los usuarios",
+            description = "Obtiene la lista de todos los usuarios registrados para grupos de estudio")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de usuarios obtenida exitosamente"),
+            @ApiResponse(responseCode = "204", description = "No hay usuarios registrados"),
+            @ApiResponse(responseCode = "500", description = "Error interno al obtener usuarios")
+    })
+    @GetMapping("/usuarios")
+    public ResponseEntity<List<Usuario>> obtenerTodosLosUsuarios() {
+        try {
+            List<Usuario> usuarios = grupoEstudioService.obtenerTodosLosUsuarios();
+            if (usuarios.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(usuarios);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al obtener los usuarios", e);
+        }
+    }
+
+    @Operation(summary = "Obtener usuario por correo",
+            description = "Obtiene un usuario específico por su correo electrónico")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuario encontrado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Correo inválido"),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno al buscar usuario")
+    })
+    @GetMapping("/usuarios/{correo}")
+    public ResponseEntity<Usuario> obtenerUsuario(
+            @Parameter(description = "Correo del usuario a buscar", required = true)
+            @PathVariable String correo) {
+        try {
+            Usuario usuario = grupoEstudioService.obtenerUsuario(correo);
+            return ResponseEntity.ok(usuario);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (IllegalStateException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al obtener el usuario", e);
+        }
+    }
+
+    @Operation(summary = "Eliminar usuario",
+            description = "Elimina un usuario del sistema de grupos de estudio")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Usuario eliminado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Correo inválido"),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno al eliminar usuario")
+    })
+    @DeleteMapping("/usuarios/{correo}")
+    public ResponseEntity<Void> eliminarUsuario(
+            @Parameter(description = "Correo del usuario a eliminar", required = true)
+            @PathVariable String correo) {
+        try {
+            grupoEstudioService.eliminarUsuario(correo);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (IllegalStateException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al eliminar el usuario", e);
         }
     }
 }

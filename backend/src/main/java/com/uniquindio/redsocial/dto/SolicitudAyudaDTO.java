@@ -2,6 +2,7 @@ package com.uniquindio.redsocial.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.uniquindio.redsocial.model.SolicitudAyuda;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -38,10 +39,10 @@ public class SolicitudAyudaDTO {
     @Size(min = 20, max = 1000, message = "La descripción debe tener entre 20 y 1000 caracteres")
     private String descripcion;
 
-    @Schema(description = "Nivel de prioridad (1-5)", example = "3")
-    @Min(value = 1, message = "La prioridad mínima es 1")
-    @Max(value = 5, message = "La prioridad máxima es 5")
-    private Integer prioridad;
+    @Schema(description = "Nivel de prioridad", example = "ALTA")
+    @NotNull(message = "La prioridad es obligatoria")
+    private SolicitudAyuda.Prioridad prioridad;
+
 
     @Schema(description = "Materias o temas relacionados")
     @Size(min = 1, max = 5, message = "Debe especificar entre 1 y 5 materias")
@@ -67,7 +68,7 @@ public class SolicitudAyudaDTO {
     private Long ayudanteId;
 
     public SolicitudAyudaDTO(Long solicitanteId, String titulo, String descripcion,
-                             Integer prioridad, List<String> materias) {
+                             SolicitudAyuda.Prioridad prioridad, List<String> materias) {
         this.solicitanteId = solicitanteId;
         this.titulo = titulo;
         this.descripcion = descripcion;
@@ -98,7 +99,7 @@ public class SolicitudAyudaDTO {
         return solicitanteId != null && solicitanteId > 0 &&
                 titulo != null && !titulo.trim().isEmpty() &&
                 descripcion != null && !descripcion.trim().isEmpty() &&
-                prioridad != null && prioridad >= 1 && prioridad <= 5 &&
+                prioridad != null &&
                 materias != null && !materias.isEmpty() && materias.size() <= 5 &&
                 fechaLimite != null && fechaLimite.isAfter(LocalDateTime.now());
     }
@@ -133,7 +134,7 @@ public class SolicitudAyudaDTO {
     @Override
     public String toString() {
         return String.format(
-                "SolicitudAyuda{id=%d, titulo='%s', prioridad=%d, estado='%s', " +
+                "SolicitudAyuda{id=%d, titulo='%s', prioridad=%s, estado='%s', " +
                         "tiempoRestante=%d horas}",
                 id, titulo, prioridad, estado, calcularTiempoRestante()
         );

@@ -45,14 +45,14 @@ public class SolicitudAyudaController {
             validarSolicitudDTO(dto);
 
             ayudaService.registrarSolicitud(
-                    dto.getCorreoEstudiante(),
+                    dto.getSolicitanteId().toString(),
                     dto.getDescripcion(),
                     dto.getPrioridad()
             );
 
             Map<String, String> response = new HashMap<>();
             response.put("mensaje", "Solicitud de ayuda registrada exitosamente");
-            response.put("correo", dto.getCorreoEstudiante());
+            response.put("correo", dto.getSolicitanteId().toString());
             response.put("prioridad", dto.getPrioridad().toString());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -137,11 +137,11 @@ public class SolicitudAyudaController {
             throw new IllegalArgumentException("Los datos de la solicitud no pueden ser nulos");
         }
 
-        if (dto.getCorreoEstudiante() == null || dto.getCorreoEstudiante().trim().isEmpty()) {
+        if (dto.getSolicitanteId().toString().trim().isEmpty()) {
             throw new IllegalArgumentException("El correo es obligatorio");
         }
 
-        if (!dto.getCorreoEstudiante().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        if (!dto.getSolicitanteId().toString().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             throw new IllegalArgumentException("El correo electrónico no es válido");
         }
 

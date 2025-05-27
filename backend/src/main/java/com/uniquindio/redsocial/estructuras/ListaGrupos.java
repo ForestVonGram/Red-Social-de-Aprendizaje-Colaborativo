@@ -111,7 +111,7 @@ public class ListaGrupos {
         return null;
     }
 
-    private List<Usuario> toList() {
+    public List<Usuario> toList() {
         List<Usuario> usuarios = new ArrayList<>();
         NodoGrupo actual = cabeza;
         while (actual != null) {

@@ -1,8 +1,11 @@
 package com.uniquindio.redsocial.service;
 
 import com.uniquindio.redsocial.estructuras.ListaGrupos;
+import com.uniquindio.redsocial.model.GrupoEstudio;
 import com.uniquindio.redsocial.model.Usuario;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +16,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 public class GrupoService {
-    private final ListaGrupos listaGrupos = new ListaGrupos();
+    @Autowired
+    private final ListaGrupos listaGrupos;
+
+    @Autowired
+    private final GrupoEstudioService grupoEstudioService;
+
+    @Getter
+    private final GrupoEstudio grupoActual;
+
+    public GrupoService() {
+        this.listaGrupos = new ListaGrupos();
+        this.grupoEstudioService = new GrupoEstudioService();
+        this.grupoActual = new GrupoEstudio();
+        this.grupoActual.setTemaCentral("Grupo Default");
+    }
 
     public void asignarUsuarioAGrupo(Usuario usuario) {
         if (usuario == null) {
@@ -23,12 +40,21 @@ public class GrupoService {
             throw new IllegalArgumentException("El correo del usuario es requerido");
         }
 
+        // Verificar si el usuario está registrado en el sistema de grupos de estudio
+        try {
+            grupoEstudioService.obtenerUsuario(usuario.getCorreo());
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException("El usuario debe estar registrado en el sistema de grupos de estudio");
+        }
+
         Optional<Usuario> usuarioExistente = buscarUsuario(usuario.getCorreo());
         if (usuarioExistente.isPresent()) {
             throw new IllegalStateException("El usuario ya existe en el grupo");
         }
 
-        listaGrupos.agregarUsuario(usuario);
+        if (!listaGrupos.agregarUsuario(usuario, grupoActual)) {
+            throw new IllegalStateException("No se pudo agregar el usuario al grupo");
+        }
     }
 
     public boolean eliminarUsuarioDelGrupo(String correo) {
@@ -41,12 +67,11 @@ public class GrupoService {
             return false;
         }
 
-        listaGrupos.eliminarUsuarioPorCorreo(correo);
-        return true;
+        return listaGrupos.eliminarUsuarioPorCorreo(correo);
     }
 
     public List<Usuario> listarGrupo() {
-        return listaGrupos.toList();
+        return listaGrupos.obtenerMiembrosPorGrupo(grupoActual);
     }
 
     public Optional<Usuario> buscarUsuario(String correo) {
@@ -54,7 +79,7 @@ public class GrupoService {
             throw new IllegalArgumentException("El correo es requerido");
         }
 
-        return listaGrupos.toList().stream()
+        return listaGrupos.obtenerMiembrosPorGrupo(grupoActual).stream()
                 .filter(u -> u.getCorreo().equalsIgnoreCase(correo))
                 .findFirst();
     }
@@ -64,6 +89,10 @@ public class GrupoService {
             throw new IllegalArgumentException("El correo es requerido");
         }
 
-        return buscarUsuario(correo).isPresent();
+        return listaGrupos.contieneMiembro(correo);
+    }
+
+    public int getCantidadUsuarios() {
+        return listaGrupos.getTamanio();
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -28,10 +29,9 @@ public class ContenidoService {
         Contenido contenido = new Contenido();
         contenido.setTitulo(titulo);
         contenido.setDescripcion(descripcion);
-        contenido.setTipo(tipo);
-        contenido.setUrl(url);
+        contenido.setTipo(Contenido.TipoContenido.valueOf(tipo.toUpperCase()));        contenido.setUrl(url);
         contenido.setAutor(autor);
-        contenido.setFechaPublicacion(new Date());
+        contenido.setFechaPublicacion(LocalDateTime.now());
         contenido.setValoraciones(new ArrayList<>());
 
         return contenidoRepository.save(contenido);

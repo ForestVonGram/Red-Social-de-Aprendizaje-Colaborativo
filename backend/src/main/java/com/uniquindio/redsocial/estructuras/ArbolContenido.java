@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
 import java.util.*;
 
 @Component
@@ -28,6 +29,38 @@ public class ArbolContenido {
             this.altura = 1;
             this.factorEquilibrio = 0;
         }
+    }
+
+    public void insertar(Contenido contenido) {
+        insertarContenido(contenido);
+    }
+
+    public void eliminar(Contenido contenido) {
+        if (contenido == null || contenido.getId() == null) {
+            throw new IllegalArgumentException("El contenido o su ID no pueden ser nulos");
+        }
+        eliminarContenido(contenido.getId());
+    }
+
+    public List<Contenido> buscarPorTitulo(String titulo) {
+        if (titulo == null || titulo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El título no puede ser nulo o vacío");
+        }
+
+        List<Contenido> resultados = new ArrayList<>();
+        buscarPorTituloRecursivo(raiz, titulo.toLowerCase(), resultados);
+        return resultados;
+    }
+
+    private void buscarPorTituloRecursivo(NodoContenido nodo, String titulo, List<Contenido> resultados) {
+        if (nodo == null) return;
+
+        if (nodo.getContenido().getTitulo().toLowerCase().contains(titulo)) {
+            resultados.add(nodo.getContenido());
+        }
+
+        buscarPorTituloRecursivo(nodo.getIzquierdo(), titulo, resultados);
+        buscarPorTituloRecursivo(nodo.getDerecho(), titulo, resultados);
     }
 
     public void insertarContenido(Contenido contenido) {
@@ -137,7 +170,7 @@ public class ArbolContenido {
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(fecha);
-        cal2.setTime(nodo.contenido.getFechaPublicacion());
+        cal2.setTime(Date.from(nodo.contenido.getFechaPublicacion().atZone(ZoneId.systemDefault()).toInstant()));
 
         boolean mismoDia = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
@@ -146,10 +179,10 @@ public class ArbolContenido {
             resultados.add(nodo.contenido);
         }
 
-        if (fecha.compareTo(nodo.contenido.getFechaPublicacion()) <= 0) {
+        if (!fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().isAfter(nodo.contenido.getFechaPublicacion())) {
             buscarPorFechaRecursivo(nodo.izquierdo, fecha, resultados);
         }
-        if (fecha.compareTo(nodo.contenido.getFechaPublicacion()) >= 0) {
+        if (!fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().isBefore(nodo.contenido.getFechaPublicacion())) {
             buscarPorFechaRecursivo(nodo.derecho, fecha, resultados);
         }
     }
@@ -166,10 +199,6 @@ public class ArbolContenido {
 
     private void buscarPorTipoRecursivo(NodoContenido nodo, String tipo, List<Contenido> resultados) {
         if (nodo == null) return;
-
-        if (nodo.contenido.getTipo().equals(tipo)) {
-            resultados.add(nodo.contenido);
-        }
 
         buscarPorTipoRecursivo(nodo.izquierdo, tipo, resultados);
         buscarPorTipoRecursivo(nodo.derecho, tipo, resultados);
@@ -201,25 +230,31 @@ public class ArbolContenido {
             return null;
         }
 
-        if (id < nodo.contenido.getId()) {
+        if (id < nodo.getContenido().getId()) {
             nodo.izquierdo = eliminarContenidoRecursivo(nodo.izquierdo, id);
-        } else if (id > nodo.contenido.getId()) {
+        } else if (id > nodo.getContenido().getId()) {
             nodo.derecho = eliminarContenidoRecursivo(nodo.derecho, id);
         } else {
+            // Caso 1: Nodo hoja o con un solo hijo
             if (nodo.izquierdo == null) {
                 return nodo.derecho;
             } else if (nodo.derecho == null) {
                 return nodo.izquierdo;
             }
 
+            // Caso 2: Nodo con dos hijos
             NodoContenido sucesor = encontrarMinimo(nodo.derecho);
-            nodo.derecho = eliminarMinimo(nodo.derecho);
-            sucesor.izquierdo = nodo.izquierdo;
-            sucesor.derecho = nodo.derecho;
-            return balancearNodo(sucesor);
+            nodo.contenido = sucesor.contenido;
+            nodo.derecho = eliminarContenidoRecursivo(nodo.derecho, sucesor.contenido.getId());
         }
 
         return balancearNodo(nodo);
+    }
+
+    private void decrementarTamanio() {
+        if (size > 0) {
+            size--;
+        }
     }
 
     private NodoContenido eliminarMinimo(NodoContenido nodo) {
@@ -270,5 +305,14 @@ public class ArbolContenido {
         }
 
         return verificarBalance(nodo.izquierdo) && verificarBalance(nodo.derecho);
+    }
+
+    @Override
+    public String toString() {
+        return "ArbolContenido{" +
+                "tamaño=" + size +
+                ", altura=" + obtenerAlturaArbol() +
+                ", balanceado=" + estaBalanceado() +
+                '}';
     }
 }

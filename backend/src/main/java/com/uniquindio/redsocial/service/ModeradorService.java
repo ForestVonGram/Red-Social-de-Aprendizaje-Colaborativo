@@ -105,7 +105,6 @@ public class ModeradorService {
     }
 
     private Moderador obtenerModeradorActual() {
-        // Implementar lógica para obtener el moderador actual del contexto de seguridad
-        return null; // Temporary return null - implement actual logic
+        return null;
     }
 }

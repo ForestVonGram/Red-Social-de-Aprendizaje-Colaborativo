@@ -4,8 +4,9 @@ import com.uniquindio.redsocial.model.Contenido;
 import com.uniquindio.redsocial.model.Usuario;
 import com.uniquindio.redsocial.repository.ContenidoRepository;
 import com.uniquindio.redsocial.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +17,8 @@ import java.util.*;
 @Transactional
 public class ContenidoService {
 
-    @Autowired
     private ContenidoRepository contenidoRepository;
 
-    @Autowired
     private UsuarioRepository usuarioRepository;
 
     public Contenido publicar(Long idUsuario, String titulo, String descripcion, String tipo, String url) {
@@ -62,5 +61,12 @@ public class ContenidoService {
         contenido.setDescripcion(descripcion);
 
         return contenidoRepository.save(contenido);
+    }
+
+    public Page<Contenido> buscarContenidos(String criterio, Pageable pageable) {
+        if (criterio == null || criterio.trim().isEmpty()) {
+            return contenidoRepository.findAll(pageable);
+        }
+        return contenidoRepository.searchByKeyword(criterio.trim(), pageable);
     }
 }

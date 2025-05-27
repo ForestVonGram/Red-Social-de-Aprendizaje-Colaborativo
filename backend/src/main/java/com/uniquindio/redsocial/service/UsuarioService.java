@@ -5,6 +5,8 @@ import com.uniquindio.redsocial.model.Conversacion;
 import com.uniquindio.redsocial.model.Usuario;
 import com.uniquindio.redsocial.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -75,5 +77,17 @@ public class UsuarioService {
             throw new IllegalArgumentException("El correo es requerido");
         }
         return buscarPorCorreo(correo).isEmpty();
+    }
+
+    public Page<Usuario> buscarUsuarios(String criterio, Pageable pageable) {
+        if (criterio == null || criterio.trim().isEmpty()) {
+            return usuarioRepository.findAll(pageable);
+        }
+
+        return usuarioRepository.findByNombreContainingIgnoreCaseOrCorreoContainingIgnoreCase(
+                criterio.trim(),
+                criterio.trim(),
+                pageable
+        );
     }
 }

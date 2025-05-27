@@ -72,6 +72,18 @@ public class Moderador implements UserDetails {
     @Column(name = "intentos_fallidos")
     private int intentosFallidos = 0;
 
+    @OneToMany(mappedBy = "moderador", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("moderador")
+    private List<AccionModerador> acciones = new ArrayList<>();
+
+    public void agregarAccion(String descripcion, LocalDateTime fecha) {
+        AccionModerador accion = new AccionModerador();
+        accion.setDescripcion(descripcion);
+        accion.setFecha(fecha);
+        accion.setModerador(this);
+        acciones.add(accion);
+    }
+
     // Métodos de utilidad
     public void asignarSolicitud(Solicitud solicitud) {
         solicitudesAsignadas.add(solicitud);

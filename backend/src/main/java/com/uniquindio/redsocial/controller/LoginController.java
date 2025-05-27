@@ -46,11 +46,11 @@ public class LoginController {
             if (loginDTO.getCorreo() == null || loginDTO.getCorreo().trim().isEmpty()) {
                 throw new IllegalArgumentException("El correo es requerido");
             }
-            if (loginDTO.getPassword() == null || loginDTO.getPassword().trim().isEmpty()) {
+            if (loginDTO.getContrasenia() == null || loginDTO.getContrasenia().trim().isEmpty()) {
                 throw new IllegalArgumentException("La contraseña es requerida");
             }
 
-            boolean autenticado = usuarioService.autenticar(loginDTO.getCorreo(), loginDTO.getPassword());
+            boolean autenticado = usuarioService.autenticar(loginDTO.getCorreo(), loginDTO.getContrasenia());
 
             if (!autenticado) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

@@ -23,7 +23,7 @@ class HistorialContenidosTest {
     @BeforeEach
     void setUp() {
         historial = new HistorialContenidos();
-        usuario = new Usuario(1L, "Test User", "test@uq.edu.co", "password", List.of("Java"), null);
+        usuario = new Usuario("Test User", "test@uq.edu.co", "password", List.of("Java"));
         contenido = new Contenido();
         contenido.setAutor(usuario);
         valoracion = new Valoracion();

@@ -10,15 +10,22 @@ const RegisterPage: FC = () => {
     const [formData, setFormData] = useState({
         nombre: '',
         correo: '',
-        contrasenia: ''
+        contrasenia: '',
+        intereses: ['Aprendizaje']
     });
 
     const [mensaje, setMensaje] = useState('');
 
     const validarFormulario = () => {
+        const palabrasNombre = formData.nombre.trim().split(/\s+/);
+        if (palabrasNombre.length < 2) return "Debe proporcionar el nombre completo.";
+        if (!formData.correo.match(/^[A-Za-z0-9+_.-]+@(.+)$/)) return "Email inválido";
         if (!formData.nombre.trim()) return "El nombre es requerido";
-        if (!formData.correo.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return "Email inválido";
-        if (formData.contrasenia.length < 6) return "La contraseña debe tener al menos 6 caracteres";
+        const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\S+$).{8,}$/;
+        if (!passwordRegex.test(formData.contrasenia)) {
+            return "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y caracteres especiales";
+        }
+
         return null;
     };
 
@@ -38,7 +45,7 @@ const RegisterPage: FC = () => {
             nombre: formData.nombre,
             correo: formData.correo,
             contrasenia: formData.contrasenia,
-            intereses: []
+            intereses: formData.intereses // Incluir los intereses en el payload
         };
 
         setIsLoading(true);
@@ -51,6 +58,7 @@ const RegisterPage: FC = () => {
             setIsLoading(false);
         }
     };
+
 
     return (
         <div id="register">

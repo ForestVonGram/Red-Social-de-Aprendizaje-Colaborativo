@@ -56,23 +56,23 @@ public class Usuario implements UserDetails {
     @Size(min = 1, message = "Debe tener al menos un interés")
     private List<String> intereses = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "participantes")
+    @ManyToMany(mappedBy = "participantes", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"participantes", "mensajes"})
     private List<Conversacion> conversaciones = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "miembros")
+    @ManyToMany(mappedBy = "miembros", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("miembros")
     private List<GrupoEstudio> gruposEstudio = new ArrayList<>();
 
-    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnoreProperties("autor")
     private List<Contenido> contenidos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "emisor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "emisor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnoreProperties("emisor")
     private List<Mensaje> mensajesEnviados = new ArrayList<>();
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnoreProperties("usuario")
     private List<Valoracion> valoraciones = new ArrayList<>();
 

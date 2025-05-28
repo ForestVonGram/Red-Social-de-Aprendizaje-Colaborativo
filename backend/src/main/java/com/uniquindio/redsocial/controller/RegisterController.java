@@ -22,7 +22,11 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/api/register")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000"},
+        allowCredentials = "true",
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST}
+)
 @Validated
 @Tag(name = "Registro", description = "API para el registro de nuevos usuarios en el sistema")
 public class RegisterController {

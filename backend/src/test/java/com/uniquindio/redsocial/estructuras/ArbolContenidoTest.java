@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.ZoneId;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -30,13 +31,16 @@ public class ArbolContenidoTest {
         contenido.setId(id);
         contenido.setTitulo("Contenido " + id);
         contenido.setDescripcion("Descripción del contenido " + id);
-        contenido.setTipo(tipo);
+        contenido.setTipo(Contenido.TipoContenido.valueOf(tipo));
         contenido.setUrl("https://ejemplo.com/contenido/" + id);
         contenido.setAutor(usuarioPrueba);
-        contenido.setFechaPublicacion(fecha);
+        contenido.setFechaPublicacion(fecha.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime());
         contenido.setValoraciones(new ArrayList<>());
         return contenido;
     }
+
 
     @Test
     public void testInsertarContenido() {
@@ -117,8 +121,8 @@ public class ArbolContenidoTest {
         // Assert
         assertEquals(2, videos.size());
         assertEquals(1, imagenes.size());
-        assertTrue(videos.stream().allMatch(c -> c.getTipo().equals("VIDEO")));
-        assertTrue(imagenes.stream().allMatch(c -> c.getTipo().equals("IMAGEN")));
+        assertTrue(videos.stream().allMatch(c -> false));
+        assertTrue(imagenes.stream().allMatch(c -> false));
     }
 
     @Test
@@ -166,8 +170,7 @@ public class ArbolContenidoTest {
         // Assert
         assertEquals(contenidosOriginales.size(), contenidosOrdenados.size());
         for (int i = 0; i < contenidosOrdenados.size() - 1; i++) {
-            assertTrue(contenidosOrdenados.get(i).getFechaPublicacion()
-                    .compareTo(contenidosOrdenados.get(i + 1).getFechaPublicacion()) <= 0);
+            assertFalse(contenidosOrdenados.get(i).getFechaPublicacion().isAfter(contenidosOrdenados.get(i + 1).getFechaPublicacion()));
         }
     }
 

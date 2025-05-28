@@ -18,4 +18,9 @@ public class Valoracion {
 
     @ManyToOne
     private Contenido contenido;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
 }

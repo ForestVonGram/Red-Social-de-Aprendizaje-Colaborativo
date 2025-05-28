@@ -12,59 +12,46 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ConversacionRepository extends JpaRepository<Conversacion, Long> {
 
     @Query("""
-            SELECT DISTINCT c FROM Conversacion c 
-            JOIN FETCH c.participantes p 
-            WHERE :usuario MEMBER OF c.participantes 
-            AND c.estaActiva = true 
+            SELECT DISTINCT c FROM Conversacion c\s
+            JOIN FETCH c.participantes p\s
+            WHERE :usuario MEMBER OF c.participantes\s
+            AND c.estaActiva = true\s
             ORDER BY c.ultimaActividad DESC
-            """)
+           \s""")
     List<Conversacion> findByParticipantesContains(@Param("usuario") Usuario usuario);
 
     @Query("""
-            SELECT c FROM Conversacion c 
-            WHERE c.participantes.size = 2 
-            AND :usuario1 MEMBER OF c.participantes 
-            AND :usuario2 MEMBER OF c.participantes 
-            AND c.estaActiva = true
-            """)
-    Optional<Conversacion> findConversacionBetweenUsers(
-            @Param("usuario1") Usuario usuario1,
-            @Param("usuario2") Usuario usuario2
-    );
-
-    @Query("""
-            SELECT c FROM Conversacion c 
-            WHERE c.estaActiva = true 
-            AND :usuario MEMBER OF c.participantes 
+            SELECT c FROM Conversacion c\s
+            WHERE c.estaActiva = true\s
+            AND :usuario MEMBER OF c.participantes\s
             ORDER BY c.ultimaActividad DESC
-            """)
+           \s""")
     Page<Conversacion> findActiveConversations(
             @Param("usuario") Usuario usuario,
             Pageable pageable
     );
 
     @Query("""
-            SELECT c FROM Conversacion c 
-            WHERE c.fechaCreacion >= :fecha 
-            AND :usuario MEMBER OF c.participantes 
+            SELECT c FROM Conversacion c\s
+            WHERE c.fechaCreacion >= :fecha\s
+            AND :usuario MEMBER OF c.participantes\s
             ORDER BY c.fechaCreacion DESC
-            """)
+           \s""")
     List<Conversacion> findByFechaCreacionAfter(
             @Param("fecha") LocalDateTime fecha,
             @Param("usuario") Usuario usuario
     );
 
     @Query("""
-            SELECT c FROM Conversacion c 
-            WHERE c.ultimaActividad < :fecha 
+            SELECT c FROM Conversacion c\s
+            WHERE c.ultimaActividad < :fecha\s
             AND c.estaActiva = true
-            """)
+           \s""")
     List<Conversacion> findInactiveConversations(@Param("fecha") LocalDateTime fecha);
 
     @Modifying
@@ -72,51 +59,40 @@ public interface ConversacionRepository extends JpaRepository<Conversacion, Long
     void markAsInactive(@Param("id") Long id);
 
     @Query("""
-            SELECT COUNT(c) FROM Conversacion c 
-            WHERE :usuario MEMBER OF c.participantes 
+            SELECT COUNT(c) FROM Conversacion c\s
+            WHERE :usuario MEMBER OF c.participantes\s
             AND c.estaActiva = true
-            """)
+           \s""")
     long countActiveConversationsByUser(@Param("usuario") Usuario usuario);
 
     @Query("""
-            SELECT c FROM Conversacion c 
-            WHERE SIZE(c.participantes) > 2 
-            AND :usuario MEMBER OF c.participantes 
+            SELECT c FROM Conversacion c\s
+            WHERE SIZE(c.participantes) > 2\s
+            AND :usuario MEMBER OF c.participantes\s
             AND c.estaActiva = true
-            """)
+           \s""")
     List<Conversacion> findGroupConversations(@Param("usuario") Usuario usuario);
 
     @Query("""
-            SELECT c FROM Conversacion c 
-            WHERE SIZE(c.mensajes) >= :minMensajes 
-            AND c.estaActiva = true 
+            SELECT c FROM Conversacion c\s
+            WHERE SIZE(c.mensajes) >= :minMensajes\s
+            AND c.estaActiva = true\s
             AND :usuario MEMBER OF c.participantes
-            """)
+           \s""")
     List<Conversacion> findByMinimumMessages(
             @Param("minMensajes") int minMensajes,
             @Param("usuario") Usuario usuario
     );
 
     @Query("""
-            SELECT 
+            SELECT\s
                 COUNT(c) as totalConversaciones,
                 AVG(SIZE(c.mensajes)) as promedioMensajes,
                 MAX(SIZE(c.participantes)) as maxParticipantes
-            FROM Conversacion c 
+            FROM Conversacion c\s
             WHERE c.estaActiva = true
-            """)
+           \s""")
     Object[] getConversationStatistics();
-
-    @Query("""
-            SELECT c FROM Conversacion c 
-            WHERE c.participantes IN :participantes 
-            AND SIZE(c.participantes) = :numParticipantes 
-            AND c.estaActiva = true
-            """)
-    List<Conversacion> findByExactParticipants(
-            @Param("participantes") List<Usuario> participantes,
-            @Param("numParticipantes") int numParticipantes
-    );
 
     @Modifying
     @Query("UPDATE Conversacion c SET c.ultimaActividad = :fecha WHERE c.id = :id")

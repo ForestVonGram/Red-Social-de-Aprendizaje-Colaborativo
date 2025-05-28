@@ -13,22 +13,23 @@ const LoginPage: React.FC = () => {
         setError("");
         setLoading(true);
         try {
-            const loginRes = await axios.post(`${import.meta.env.VITE_API_URL}/api/login`, { correo, password });
+            const loginRes = await axios.post(`${import.meta.env.VITE_API_URL}/api/login`, { correo, contrasenia: password });
             if (loginRes.data.exitoso) {
-                if (loginRes.data.usuario && loginRes.data.usuario.id) {
-                    localStorage.setItem("usuarioId", loginRes.data.usuario.id);
-                    localStorage.setItem("userEmail", correo);
-                    window.location.href = "/Messages";
-                } else {
-                    setError("No se pudo obtener el usuario.");
-                }
+                localStorage.setItem("token", loginRes.data.token);
+                axios.defaults.headers.common['Authorization'] = `Bearer ${loginRes.data.token}`;
+            }
+            if (loginRes.data.usuario && loginRes.data.usuario.id) {
+                localStorage.setItem("usuarioId", loginRes.data.usuario.id);
+                localStorage.setItem("userEmail", correo);
+                window.location.href = "/Messages";
             } else {
-                setError(loginRes.data.mensaje || "Credenciales incorrectas.");
+                setError("No se pudo obtener el usuario.");
             }
         } catch (err: any) {
             setError(err.response?.data?.mensaje || "Error al iniciar sesión.");
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     return (

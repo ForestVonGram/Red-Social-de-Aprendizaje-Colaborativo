@@ -2,6 +2,7 @@ package com.uniquindio.redsocial.controller;
 
 import com.uniquindio.redsocial.dto.LoginDTO;
 import com.uniquindio.redsocial.model.Usuario;
+import com.uniquindio.redsocial.service.JwtService;
 import com.uniquindio.redsocial.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,6 +15,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -30,6 +34,8 @@ import java.util.Map;
 public class LoginController {
 
     private final UsuarioService usuarioService;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     @Operation(summary = "Iniciar sesión",
             description = "Autentica un usuario en el sistema")
@@ -39,37 +45,44 @@ public class LoginController {
             @ApiResponse(responseCode = "400", description = "Datos de inicio de sesión inválidos")
     })
     @PostMapping
-    public ResponseEntity<Map<String, Object>> login(
-            @Parameter(description = "Credenciales de usuario", required = true)
-            @Valid @RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody LoginDTO loginDTO) {
         try {
-            if (loginDTO.getCorreo() == null || loginDTO.getCorreo().trim().isEmpty()) {
-                throw new IllegalArgumentException("El correo es requerido");
-            }
-            if (loginDTO.getContrasenia() == null || loginDTO.getContrasenia().trim().isEmpty()) {
-                throw new IllegalArgumentException("La contraseña es requerida");
-            }
+            // Intenta autenticar al usuario
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginDTO.getCorreo(),
+                            loginDTO.getContrasenia()
+                    )
+            );
 
-            boolean autenticado = usuarioService.autenticar(loginDTO.getCorreo(), loginDTO.getContrasenia());
-
-            if (!autenticado) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(crearRespuesta(false, "Credenciales inválidas"));
-            }
-
+            // Si llegamos aquí, la autenticación fue exitosa
             Usuario usuario = usuarioService.buscarPorCorreo(loginDTO.getCorreo())
-                    .orElseThrow(() -> new IllegalStateException("Usuario no encontrado después de autenticación"));
+                    .orElseThrow(() -> new IllegalStateException("Usuario no encontrado"));
 
-            Map<String, Object> respuesta = crearRespuesta(true, "Inicio de sesión exitoso");
-            respuesta.put("usuario", usuario);
+            // Generar el token JWT
+            String token = jwtService.generateToken(usuario);
+
+            // Crear la respuesta
+            Map<String, Object> respuesta = new HashMap<>();
+            respuesta.put("token", token);
+            respuesta.put("usuario", Map.of(
+                    "id", usuario.getId(),
+                    "nombre", usuario.getNombre(),
+                    "correo", usuario.getCorreo(),
+                    "rol", usuario.getRol()
+            ));
+            respuesta.put("mensaje", "Inicio de sesión exitoso");
 
             return ResponseEntity.ok(respuesta);
 
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (AuthenticationException e) {
+            Map<String, Object> respuesta = new HashMap<>();
+            respuesta.put("error", "Credenciales inválidas");
+            respuesta.put("mensaje", "Usuario o contraseña incorrectos");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respuesta);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Error durante el inicio de sesión", e);
+                    "Error durante el inicio de sesión");
         }
     }
 

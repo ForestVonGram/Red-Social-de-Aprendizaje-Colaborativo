@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/solicitudes")
@@ -107,7 +108,7 @@ public class SolicitudController {
     @GetMapping("/listar")
     public ResponseEntity<?> listarSolicitudes() {
         try {
-            List<String> solicitudes = solicitudService.getSolicitudesOrdenadas();
+            List<Solicitud> solicitudes = solicitudService.getSolicitudesOrdenadas();
 
             if (solicitudes.isEmpty()) {
                 Map<String, String> response = new HashMap<>();
@@ -115,12 +116,21 @@ public class SolicitudController {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
             }
 
-            return ResponseEntity.ok(solicitudes);
+            // Transformar List<Solicitud> a List<String>
+            List<String> solicitudesFormateadas = solicitudes.stream()
+                    .map(solicitud -> String.format("Estudiante: %s, Descripción: %s, Prioridad: %d",
+                            solicitud.getEstudiante(),
+                            solicitud.getDescripcion(),
+                            solicitud.getPrioridad()))
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(solicitudesFormateadas);
         } catch (RuntimeException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error al listar las solicitudes");
         }
     }
+
 
     private void validarDatosSolicitud(String estudiante, String descripcion, int prioridad) {
         if (estudiante == null || estudiante.trim().isEmpty()) {

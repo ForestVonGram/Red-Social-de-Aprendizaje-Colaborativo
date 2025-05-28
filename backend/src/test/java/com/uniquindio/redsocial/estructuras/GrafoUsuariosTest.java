@@ -19,9 +19,29 @@ public class GrafoUsuariosTest {
     @BeforeEach
     void setUp() {
         grafo = new GrafoUsuarios();
-        u1 = new Usuario(1L, "Ana", "ana@uq.edu.co", "123", List.of("IA"), null);
-        u2 = new Usuario(2L, "Luis", "luis@uq.edu.co", "456", List.of("Redes"), null);
-        u3 = new Usuario(3L, "Carlos", "carlos@uq.edu.co", "789", List.of("Bases de Datos"), null);
+        u1 = Usuario.builder()
+                .id(1L)
+                .nombre("Ana")
+                .correo("ana@uq.edu.co")
+                .contrasenia("123")
+                .intereses(List.of("IA"))
+                .build();
+
+        u2 = Usuario.builder()
+                .id(2L)
+                .nombre("Luis")
+                .correo("luis@uq.edu.co")
+                .contrasenia("456")
+                .intereses(List.of("Redes"))
+                .build();
+
+        u3 = Usuario.builder()
+                .id(3L)
+                .nombre("Carlos")
+                .correo("carlos@uq.edu.co")
+                .contrasenia("789")
+                .intereses(List.of("Bases de Datos"))
+                .build();
     }
 
     @Test

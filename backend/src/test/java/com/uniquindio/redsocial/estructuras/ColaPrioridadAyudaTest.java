@@ -26,9 +26,26 @@ class ColaPrioridadAyudaTest {
     @BeforeEach
     void setUp() {
         cola = new ColaPrioridadAyuda();
-        solicitudAlta = new SolicitudAyuda(1L, "Duda de álgebra", "maria@uq.edu.co", SolicitudAyuda.Prioridad.ALTA);
-        solicitudMedia = new SolicitudAyuda(2L, "Problema con grafos", "juan@uq.edu.co", SolicitudAyuda.Prioridad.MEDIA);
-        solicitudBaja = new SolicitudAyuda(3L, "Consulta sobre Java", "pedro@uq.edu.co", SolicitudAyuda.Prioridad.BAJA);
+        solicitudAlta = new SolicitudAyuda(
+                "Duda de álgebra",
+                "maria@uq.edu.co",
+                SolicitudAyuda.Prioridad.ALTA
+        );
+        solicitudAlta.setId(1L);
+
+        solicitudMedia = new SolicitudAyuda(
+                "Problema con grafos",
+                "juan@uq.edu.co",
+                SolicitudAyuda.Prioridad.MEDIA
+        );
+        solicitudMedia.setId(2L);
+
+        solicitudBaja = new SolicitudAyuda(
+                "Consulta sobre Java",
+                "pedro@uq.edu.co",
+                SolicitudAyuda.Prioridad.BAJA
+        );
+        solicitudBaja.setId(3L);
     }
 
     @Nested
@@ -107,7 +124,6 @@ class ColaPrioridadAyudaTest {
                 executor.submit(() -> {
                     try {
                         cola.agregarSolicitud(new SolicitudAyuda(
-                                id,
                                 "Solicitud " + id,
                                 "user" + id + "@uq.edu.co",
                                 SolicitudAyuda.Prioridad.MEDIA
@@ -132,8 +148,10 @@ class ColaPrioridadAyudaTest {
         @Test
         @DisplayName("Debería manejar solicitudes con la misma prioridad")
         void testSolicitudesMismaPrioridad() {
-            SolicitudAyuda s1 = new SolicitudAyuda(1L, "S1", "user1@uq.edu.co", SolicitudAyuda.Prioridad.ALTA);
-            SolicitudAyuda s2 = new SolicitudAyuda(2L, "S2", "user2@uq.edu.co", SolicitudAyuda.Prioridad.ALTA);
+            SolicitudAyuda s1 = new SolicitudAyuda("S1", "user1@uq.edu.co", SolicitudAyuda.Prioridad.ALTA);
+            s1.setId(1L);
+            SolicitudAyuda s2 = new SolicitudAyuda("S2", "user2@uq.edu.co", SolicitudAyuda.Prioridad.ALTA);
+            s2.setId(2L);
 
             cola.agregarSolicitud(s1);
             cola.agregarSolicitud(s2);
@@ -147,7 +165,6 @@ class ColaPrioridadAyudaTest {
         void testMuchasSolicitudes() {
             for (int i = 0; i < 1000; i++) {
                 cola.agregarSolicitud(new SolicitudAyuda(
-                        (long) i,
                         "Solicitud " + i,
                         "user" + i + "@uq.edu.co",
                         SolicitudAyuda.Prioridad.MEDIA

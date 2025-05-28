@@ -23,8 +23,11 @@ class ListaGruposTest {
     @BeforeEach
     void setUp() {
         listaGrupos = new ListaGrupos();
-        usuario1 = new Usuario(1L, "Ana", "ana@uq.edu.co", "123", List.of("Java"), null);
-        usuario2 = new Usuario(2L, "Luis", "luis@uq.edu.co", "456", List.of("Python"), null);
+        usuario1 = new Usuario("Ana", "ana@uq.edu.co", "123", List.of("Java"));
+        usuario1.setId(1L);
+
+        usuario2 = new Usuario("Luis", "luis@uq.edu.co", "456", List.of("Python"));
+        usuario2.setId(2L);
 
         grupo1 = new GrupoEstudio();
         grupo1.setId(1L);

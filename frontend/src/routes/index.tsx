@@ -3,6 +3,7 @@ import Landing from "@/pages/LandingPage";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
 import Messages from "@/pages/Messages";
+import Profile from "@/pages/Profile";
 
 export default function AppRoutes() {
     return (
@@ -12,6 +13,7 @@ export default function AppRoutes() {
                 <Route path="/LoginPage" element={<LoginPage />} />
                 <Route path="/RegisterPage" element={<RegisterPage />} />
                 <Route path="/Messages" element={<Messages />} />
+                <Route path="/Profile" element={<Profile />} />
                 {/* Aquí van las rutas */}
             </Routes>
         </Router>

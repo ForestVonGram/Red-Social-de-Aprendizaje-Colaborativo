@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/LoginPageStyle.css";
 
 const LoginPage: React.FC = () => {
+    const navigate = useNavigate();
     const [correo, setCorreo] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -14,23 +16,26 @@ const LoginPage: React.FC = () => {
         setLoading(true);
         try {
             const loginRes = await axios.post(`${import.meta.env.VITE_API_URL}/api/login`, { correo, contrasenia: password });
-            if (loginRes.data.exitoso) {
+            if (loginRes.data.token) {
                 localStorage.setItem("token", loginRes.data.token);
-                axios.defaults.headers.common['Authorization'] = `Bearer ${loginRes.data.token}`;
-            }
-            if (loginRes.data.usuario && loginRes.data.usuario.id) {
                 localStorage.setItem("usuarioId", loginRes.data.usuario.id);
                 localStorage.setItem("userEmail", correo);
-                window.location.href = "/Messages";
+
+                // Configura el token para futuras peticiones
+                axios.defaults.headers.common['Authorization'] = `Bearer ${loginRes.data.token}`;
+
+                navigate("/Profile");
             } else {
-                setError("No se pudo obtener el usuario.");
+                setError("Error en la autenticación");
             }
         } catch (err: any) {
-            setError(err.response?.data?.mensaje || "Error al iniciar sesión.");
+            console.error("Error de login:", err);
+            setError(err.response?.data?.mensaje || "Error al iniciar sesión");
         } finally {
             setLoading(false);
         }
     };
+
 
     return (
         <div className="login-container">

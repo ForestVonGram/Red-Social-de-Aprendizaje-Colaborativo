@@ -140,4 +140,19 @@ public class UsuarioController {
                     "Error al eliminar el usuario");
         }
     }
+
+    @GetMapping("/{correo}")
+    public ResponseEntity<Usuario> obtenerUsuarioPorCorreo(
+            @PathVariable String correo) {
+        try {
+            return usuarioService.buscarPorCorreo(correo)
+                    .map(ResponseEntity::ok)
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al obtener el usuario");
+        }
+    }
 }

@@ -29,13 +29,13 @@ public class Mensaje {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emisor_id", nullable = false)
     @NotNull(message = "El emisor es requerido")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "mensajesEnviados", "conversaciones", "contenidos", "valoraciones"}, allowGetters = true)
     private Usuario emisor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "conversacion_id", nullable = false)
     @NotNull(message = "La conversación es requerida")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "mensajes"})
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "mensajes"}, allowSetters = true)
     private Conversacion conversacion;
 
     @CreationTimestamp

@@ -46,10 +46,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     @Modifying
     @Query("""
-            UPDATE Usuario u 
-            SET u.intentosFallidos = u.intentosFallidos + 1 
+            UPDATE Usuario u\s
+            SET u.intentosFallidos = u.intentosFallidos + 1\s
             WHERE u.correo = :correo
-            """)
+           \s""")
     void incrementarIntentosFallidos(@Param("correo") String correo);
 
     @Modifying

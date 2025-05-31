@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -154,5 +155,57 @@ public class UsuarioController {
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error al obtener el usuario");
         }
+    }
+
+    @Operation(summary = "Buscar usuarios por nombre",
+            description = "Busca usuarios cuyo nombre coincida parcialmente con el término de búsqueda")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Búsqueda realizada exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Map<String, Object>>> buscarUsuarios(@RequestParam("nombre") String nombre) {
+        try {
+            List<Usuario> coincidencias = usuarioService.buscarPorNombre(nombre);
+            List<Map<String, Object>> resultados = coincidencias.stream()
+                    .map(usuario -> {
+                        Map<String, Object> usuarioMap = new HashMap<>();
+                        usuarioMap.put("id", usuario.getId());
+                        usuarioMap.put("nombre", usuario.getNombre());
+                        usuarioMap.put("correo", usuario.getCorreo());
+                        return usuarioMap;
+                    })
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(resultados);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al buscar usuarios: " + e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Obtener perfil de un usuario por correo",
+            description = "Devuelve los datos del usuario según el correo proporcionado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Perfil obtenido exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
+    @GetMapping("/perfil/{correo}")
+    public ResponseEntity<?> obtenerPerfilUsuarioPorCorreo(@PathVariable String correo) {
+        Optional<Usuario> usuarioOpt = usuarioService.buscarPorCorreo(correo);
+        if (usuarioOpt.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
+        }
+
+        Usuario usuario = usuarioOpt.get();
+
+        Map<String, Object> perfilDTO = new HashMap<>();
+        perfilDTO.put("id", usuario.getId());
+        perfilDTO.put("nombre", usuario.getNombre());
+        perfilDTO.put("correo", usuario.getCorreo());
+        perfilDTO.put("intereses", usuario.getIntereses());
+
+        return ResponseEntity.ok(perfilDTO);
     }
 }

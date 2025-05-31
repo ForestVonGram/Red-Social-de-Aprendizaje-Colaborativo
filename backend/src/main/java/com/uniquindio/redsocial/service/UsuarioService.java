@@ -88,4 +88,9 @@ public class UsuarioService {
                 pageable
         );
     }
+
+    public List<Usuario> buscarPorNombre(String nombre) {
+        return usuarioRepository.findByNombreContainingIgnoreCase(nombre);
+    }
+
 }

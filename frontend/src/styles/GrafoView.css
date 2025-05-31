@@ -1,0 +1,42 @@
+/*!* App.css *!*/
+
+/*body {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;*/
+/*    background-color: #0e0e1a; !* fondo oscuro *!*/
+/*    color: #e0e0ff; !* texto claro azulado *!*/
+/*}*/
+
+/*.afinidad-container {*/
+/*    padding: 2rem;*/
+/*    max-width: 700px;*/
+/*    margin: 0 auto;*/
+/*    background: linear-gradient(135deg, #1e1e2f, #141420);*/
+/*    border-radius: 20px;*/
+/*    box-shadow: 0 0 20px rgba(173, 104, 255, 0.3);*/
+/*    margin-top: 4rem;*/
+/*}*/
+
+/*.titulo {*/
+/*    font-size: 2.5rem;*/
+/*    font-weight: bold;*/
+/*    text-align: center;*/
+/*    color: #ff7edb; !* rosado vibrante *!*/
+/*    margin-bottom: 2rem;*/
+/*    text-shadow: 0 0 10px rgba(255, 126, 219, 0.4);*/
+/*}*/
+
+/*p {*/
+/*    font-size: 1.2rem;*/
+/*    margin: 0.8rem 0;*/
+/*    padding: 0.6rem 1rem;*/
+/*    background-color: #221b39; !* fondo violeta oscuro *!*/
+/*    border-left: 5px solid #7f5af0; !* morado *!*/
+/*    border-radius: 10px;*/
+/*    transition: background 0.3s ease;*/
+/*}*/
+
+/*p:hover {*/
+/*    background-color: #2c214d; !* azul-morado más claro *!*/
+/*}*/

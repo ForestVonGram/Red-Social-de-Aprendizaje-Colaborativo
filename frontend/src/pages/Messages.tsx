@@ -5,6 +5,7 @@ import "../styles/Messages.css";
 interface Usuario {
     id: number;
     nombre: string;
+    correo: string;
 }
 
 interface Conversacion {
@@ -19,7 +20,7 @@ interface Mensaje {
     remitente: Usuario;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+// Using configured axios instance with baseURL, no need for API_BASE_URL
 
 const obtenerUsuarioActualId = (): number | null => {
     const id = localStorage.getItem("usuarioId");
@@ -37,6 +38,9 @@ const Messages: React.FC = () => {
     const [mensajes, setMensajes] = useState<Mensaje[]>([]);
     const [conversacionSeleccionada, setConversacionSeleccionada] = useState<Conversacion | null>(null);
     const [nuevoMensaje, setNuevoMensaje] = useState("");
+    const [searchInput, setSearchInput] = useState("");
+    const [resultadosBusqueda, setResultadosBusqueda] = useState<Usuario[]>([]);
+
     const usuarioActualId = obtenerUsuarioActualId();
     const usuarioActualEmail = obtenerUsuarioActualEmail();
 
@@ -44,28 +48,46 @@ const Messages: React.FC = () => {
         if (!usuarioActualEmail) return;
         try {
             setIsLoading(true);
-            const response = await axios.get(`${API_BASE_URL}/api/usuarios/${usuarioActualEmail}/conversaciones`);
-            setConversaciones(response.data);
+            const response = await axios.get(`/api/usuarios/${usuarioActualEmail}/conversaciones`);
+            const data = response.data;
+            setConversaciones(data.conversaciones ?? []);
         } catch (err) {
-            setError('Error al cargar las conversaciones');
-            console.error('Error:', err);
+            setError("Error al cargar las conversaciones");
+            console.error("Error:", err);
+            setConversaciones([]);
         } finally {
             setIsLoading(false);
         }
     }, [usuarioActualEmail]);
 
     useEffect(() => {
-        fetchConversaciones();
-    }, [fetchConversaciones]);
+        const fetchMensajes = async () => {
+            if (!conversacionSeleccionada || !conversacionSeleccionada.id) {
+                console.error("No se ha seleccionado una conversación válida.");
+                return;
+            }
+
+            try {
+                const response = await axios.get(`/api/mensajes/conversacion/${conversacionSeleccionada.id}`);
+                setMensajes(response.data);
+            } catch (error) {
+                console.error("Error al cargar los mensajes:", error);
+                setError("No se pudieron cargar los mensajes.");
+            }
+        };
+
+        fetchMensajes();
+    }, [conversacionSeleccionada]);
 
     const seleccionarConversacion = async (conv: Conversacion) => {
         setConversacionSeleccionada(conv);
         try {
-            const response = await axios.get(`${API_BASE_URL}/api/mensajes/conversacion/${conv.id}`);
-            setMensajes(response.data);
+            const response = await axios.get(`/api/mensajes/conversacion/${conv.id}`);
+            setMensajes(Array.isArray(response.data) ? response.data : []);
         } catch (err) {
-            setError('Error al cargar los mensajes');
-            console.error('Error:', err);
+            setError("Error al cargar los mensajes");
+            console.error("Error:", err);
+            setMensajes([]);
         }
     };
 
@@ -73,23 +95,74 @@ const Messages: React.FC = () => {
         if (!conversacionSeleccionada || !nuevoMensaje.trim() || !usuarioActualId) return;
 
         try {
-            const response = await axios.post(`${API_BASE_URL}/api/mensajes`, {
+            const response = await axios.post(`/api/mensajes`, {
                 remitenteId: usuarioActualId,
                 conversacionId: conversacionSeleccionada.id,
                 contenido: nuevoMensaje.trim(),
             });
-            setMensajes(prevMensajes => [...prevMensajes, response.data]);
+            setMensajes((prevMensajes) => [...prevMensajes, response.data]);
             setNuevoMensaje("");
         } catch (err) {
-            setError('Error al enviar el mensaje');
-            console.error('Error:', err);
+            setError("Error al enviar el mensaje");
+            console.error("Error:", err);
         }
     };
 
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
+        if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             enviarMensaje();
+        }
+    };
+
+    const buscarUsuarios = async (nombre: string) => {
+        if (!nombre.trim()) {
+            setResultadosBusqueda([]);
+            return;
+        }
+
+        try {
+            const response = await axios.get(`/api/usuarios/buscar`, {
+                params: { nombre },
+            });
+            // Ensure we're handling the response data correctly
+            let usuarios = Array.isArray(response.data) ? response.data : [];
+
+            // Filtrar el usuario actual de los resultados de búsqueda
+            if (usuarioActualEmail) {
+                usuarios = usuarios.filter(usuario => usuario.correo !== usuarioActualEmail);
+            }
+
+            setResultadosBusqueda(usuarios);
+        } catch (err) {
+            console.error("Error al buscar usuarios:", err);
+            setResultadosBusqueda([]);
+        }
+    };
+
+    const crearConversacion = async (correoDestino: string) => {
+        try {
+            const response = await axios.post(`/api/conversaciones/por-correo`, {
+                correoEmisor: usuarioActualEmail,
+                correoReceptor: correoDestino,
+            });
+
+            if (response.status === 201 || response.status === 200) {
+                // Obtener la conversación recién creada
+                const nuevaConversacion = response.data;
+
+                // Actualizar la lista de conversaciones
+                await fetchConversaciones();
+
+                // Seleccionar automáticamente la conversación recién creada
+                await seleccionarConversacion(nuevaConversacion);
+
+                // Limpiar la búsqueda
+                setSearchInput("");
+                setResultadosBusqueda([]);
+            }
+        } catch (err) {
+            console.error("Error al crear conversación:", err);
         }
     };
 
@@ -97,7 +170,9 @@ const Messages: React.FC = () => {
         return (
             <div className="no-auth">
                 <h2>Debes iniciar sesión para ver tus mensajes.</h2>
-                <a href="/LoginPage" className="login-link">Iniciar sesión</a>
+                <a href="/LoginPage" className="login-link">
+                    Iniciar sesión
+                </a>
             </div>
         );
     }
@@ -129,10 +204,29 @@ const Messages: React.FC = () => {
                         placeholder="Buscar estudiante..."
                         className="search-input"
                         aria-label="Buscar estudiante"
+                        value={searchInput}
+                        onChange={(e) => {
+                            const valor = e.target.value;
+                            setSearchInput(valor);
+                            buscarUsuarios(valor);
+                        }}
                     />
+                    {resultadosBusqueda.length > 0 && (
+                        <ul className="search-results">
+                            {resultadosBusqueda.map((usuario) => (
+                                <li
+                                    key={usuario.id}
+                                    className="search-result-item"
+                                    onClick={() => crearConversacion(usuario.correo)}
+                                >
+                                    {usuario.nombre} ({usuario.correo})
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                     <ul className="conversation-list">
-                        {conversaciones.map(conv => {
-                            const nombre = conv.participantes.find(u => u.id !== usuarioActualId)?.nombre ?? "Chat";
+                        {conversaciones.map((conv) => {
+                            const nombre = conv.participantes.find((u) => u.id !== usuarioActualId)?.nombre ?? "Chat";
                             return (
                                 <li
                                     key={conv.id}
@@ -157,18 +251,20 @@ const Messages: React.FC = () => {
                     <div className="chat-header">
                         <h2>
                             {conversacionSeleccionada
-                                ? conversacionSeleccionada.participantes.find(u => u.id !== usuarioActualId)?.nombre
+                                ? conversacionSeleccionada.participantes.find((u) => u.id !== usuarioActualId)?.nombre
                                 : "Selecciona un usuario"}
                         </h2>
                     </div>
                     <div className="chat-messages">
-                        {mensajes.map(msg => (
+                        {Array.isArray(mensajes) && mensajes.map((msg) => (
                             <div
                                 key={msg.id}
                                 className={`message ${msg.remitente.id === usuarioActualId ? "sent" : "received"}`}
                             >
                                 <p>{msg.contenido}</p>
-                                <span className="timestamp">{new Date(msg.fecha).toLocaleTimeString()}</span>
+                                <span className="timestamp">
+                                    {new Date(msg.fecha).toLocaleTimeString()}
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -177,7 +273,7 @@ const Messages: React.FC = () => {
                             type="text"
                             placeholder="Escribe tu mensaje..."
                             value={nuevoMensaje}
-                            onChange={e => setNuevoMensaje(e.target.value)}
+                            onChange={(e) => setNuevoMensaje(e.target.value)}
                             onKeyPress={handleKeyPress}
                             disabled={!conversacionSeleccionada}
                         />

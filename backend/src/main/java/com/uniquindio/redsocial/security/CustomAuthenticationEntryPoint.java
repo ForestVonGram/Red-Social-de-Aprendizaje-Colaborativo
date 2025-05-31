@@ -18,6 +18,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     ) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
+        System.out.println("Authentication failed: " + authException.getMessage());
         response.getWriter().write(
                 "{\"error\": \"No autorizado\", \"message\": \"" +
                         authException.getMessage() + "\"}"

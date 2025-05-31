@@ -1,6 +1,7 @@
 package com.uniquindio.redsocial.controller;
 
 import com.uniquindio.redsocial.dto.MensajeDTO;
+import com.uniquindio.redsocial.dto.MensajeResponseDTO;
 import com.uniquindio.redsocial.model.Mensaje;
 import com.uniquindio.redsocial.service.MensajeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +39,7 @@ public class MensajeController {
             @ApiResponse(responseCode = "403", description = "Usuario no autorizado para esta conversación")
     })
     @PostMapping
-    public ResponseEntity<Mensaje> enviarMensaje(
+    public ResponseEntity<MensajeResponseDTO> enviarMensaje(
             @Parameter(description = "Datos del mensaje a enviar", required = true)
             @Valid @RequestBody MensajeDTO dto) {
         try {
@@ -50,7 +51,8 @@ public class MensajeController {
                     dto.getContenido()
             );
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(mensaje);
+            MensajeResponseDTO responseDTO = MensajeResponseDTO.fromEntity(mensaje);
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (SecurityException e) {
@@ -69,7 +71,7 @@ public class MensajeController {
             @ApiResponse(responseCode = "403", description = "Usuario no autorizado para ver esta conversación")
     })
     @GetMapping("/conversacion/{id}")
-    public ResponseEntity<List<Mensaje>> obtenerMensajes(
+    public ResponseEntity<List<MensajeResponseDTO>> obtenerMensajes(
             @Parameter(description = "ID de la conversación", required = true)
             @PathVariable Long id) {
         try {
@@ -79,7 +81,11 @@ public class MensajeController {
                 return ResponseEntity.noContent().build();
             }
 
-            return ResponseEntity.ok(mensajes);
+            List<MensajeResponseDTO> responseDTOs = mensajes.stream()
+                    .map(MensajeResponseDTO::fromEntity)
+                    .toList();
+
+            return ResponseEntity.ok(responseDTOs);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (SecurityException e) {

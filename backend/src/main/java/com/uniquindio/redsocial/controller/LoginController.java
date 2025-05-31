@@ -2,7 +2,6 @@ package com.uniquindio.redsocial.controller;
 
 import com.uniquindio.redsocial.dto.LoginDTO;
 import com.uniquindio.redsocial.model.Usuario;
-import com.uniquindio.redsocial.service.JwtService;
 import com.uniquindio.redsocial.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,37 +33,27 @@ import java.util.Map;
 public class LoginController {
 
     private final UsuarioService usuarioService;
-    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    @Operation(summary = "Iniciar sesión",
-            description = "Autentica un usuario en el sistema")
-    @ApiResponses(value = {
+    @Operation(summary = "Iniciar sesión", description = "Autentica un usuario en el sistema")
+    @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Autenticación exitosa"),
             @ApiResponse(responseCode = "401", description = "Credenciales inválidas"),
-            @ApiResponse(responseCode = "400", description = "Datos de inicio de sesión inválidos")
+            @ApiResponse(responseCode = "400", description = "Datos inválidos")
     })
     @PostMapping
     public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody LoginDTO loginDTO) {
         try {
-            // Intenta autenticar al usuario
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginDTO.getCorreo(),
-                            loginDTO.getContrasenia()
+                            loginDTO.getCorreo(), loginDTO.getContrasenia()
                     )
             );
 
-            // Si llegamos aquí, la autenticación fue exitosa
             Usuario usuario = usuarioService.buscarPorCorreo(loginDTO.getCorreo())
-                    .orElseThrow(() -> new IllegalStateException("Usuario no encontrado"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
-            // Generar el token JWT
-            String token = jwtService.generateToken(usuario);
-
-            // Crear la respuesta
             Map<String, Object> respuesta = new HashMap<>();
-            respuesta.put("token", token);
             respuesta.put("usuario", Map.of(
                     "id", usuario.getId(),
                     "nombre", usuario.getNombre(),
@@ -72,49 +61,32 @@ public class LoginController {
                     "rol", usuario.getRol()
             ));
             respuesta.put("mensaje", "Inicio de sesión exitoso");
-
             return ResponseEntity.ok(respuesta);
 
         } catch (AuthenticationException e) {
-            Map<String, Object> respuesta = new HashMap<>();
-            respuesta.put("error", "Credenciales inválidas");
-            respuesta.put("mensaje", "Usuario o contraseña incorrectos");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respuesta);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                    "error", "Credenciales inválidas",
+                    "mensaje", "Usuario o contraseña incorrectos"
+            ));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Error durante el inicio de sesión");
+                    "Error durante el inicio de sesión", e);
         }
     }
 
-    @Operation(summary = "Obtener información de usuario",
-            description = "Obtiene la información de un usuario por su correo electrónico")
-    @ApiResponses(value = {
+    @Operation(summary = "Obtener usuario por correo", description = "Devuelve información de un usuario")
+    @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
             @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
-            @ApiResponse(responseCode = "400", description = "Correo electrónico inválido")
+            @ApiResponse(responseCode = "400", description = "Correo inválido")
     })
     @GetMapping("/{correo}")
     public ResponseEntity<Usuario> obtenerUsuario(
-            @Parameter(description = "Correo electrónico del usuario", required = true)
-            @PathVariable @NotBlank @Email(message = "Debe proporcionar un correo electrónico válido")
-            String correo) {
-        try {
-            return usuarioService.buscarPorCorreo(correo)
-                    .map(ResponseEntity::ok)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Usuario no encontrado"));
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Error al obtener la información del usuario", e);
-        }
-    }
-
-    private Map<String, Object> crearRespuesta(boolean exitoso, String mensaje) {
-        Map<String, Object> respuesta = new HashMap<>();
-        respuesta.put("exitoso", exitoso);
-        respuesta.put("mensaje", mensaje);
-        return respuesta;
+            @Parameter(description = "Correo electrónico", required = true)
+            @PathVariable @NotBlank @Email(message = "Correo electrónico inválido") String correo) {
+        return usuarioService.buscarPorCorreo(correo)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Usuario no encontrado"));
     }
 }

@@ -68,9 +68,9 @@ public class Usuario implements UserDetails {
     @JsonIgnoreProperties("autor")
     private List<Contenido> contenidos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "emisor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("emisor")
-    private List<Mensaje> mensajesEnviados = new ArrayList<>();
+    @OneToMany(mappedBy = "emisor", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnoreProperties(value = {"mensajes", "participantes"}, allowSetters = true)
+    private List<Mensaje> mensajesEnviados;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnoreProperties("usuario")

@@ -15,15 +15,16 @@ const LoginPage: React.FC = () => {
         setError("");
         setLoading(true);
         try {
-            const loginRes = await axios.post(`${import.meta.env.VITE_API_URL}/api/login`, { correo, contrasenia: password });
-            if (loginRes.data.token) {
-                localStorage.setItem("token", loginRes.data.token);
+            const loginRes = await axios.post('/api/login', {
+                correo,
+                contrasenia: password
+            });
+
+            if (loginRes.data && loginRes.data.usuario) {
+                // Store user data in localStorage
+                localStorage.setItem("userCorreo", loginRes.data.usuario.correo);
+                localStorage.setItem("userEmail", loginRes.data.usuario.correo);
                 localStorage.setItem("usuarioId", loginRes.data.usuario.id);
-                localStorage.setItem("userEmail", correo);
-
-                // Configura el token para futuras peticiones
-                axios.defaults.headers.common['Authorization'] = `Bearer ${loginRes.data.token}`;
-
                 navigate("/Profile");
             } else {
                 setError("Error en la autenticación");
@@ -35,7 +36,6 @@ const LoginPage: React.FC = () => {
             setLoading(false);
         }
     };
-
 
     return (
         <div className="login-container">

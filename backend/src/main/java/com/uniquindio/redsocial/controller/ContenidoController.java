@@ -127,4 +127,22 @@ public class ContenidoController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+    @GetMapping
+    public ResponseEntity<List<Contenido>> listarContenido() {
+        try {
+            List<Contenido> contenidos = contenidoService.listarContenidos();
+
+            if (contenidos.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+
+            return ResponseEntity.ok(contenidos);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error al obtener el contenido"
+            );
+        }
+    }
 }

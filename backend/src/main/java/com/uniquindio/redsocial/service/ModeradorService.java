@@ -27,14 +27,12 @@ public class ModeradorService {
 
     private final ModeradorRepository moderadorRepository;
 
-    @PreAuthorize("hasRole('MODERADOR')")
     public boolean eliminarUsuario(String correo) {
         validarCorreo(correo);
         registrarAccion("Eliminación de usuario: " + correo);
         return usuarioService.eliminarUsuario(correo);
     }
 
-    @PreAuthorize("hasRole('MODERADOR')")
     public boolean eliminarContenido(String idContenido) {
         validarId(idContenido);
         registrarAccion("Eliminación de contenido: " + idContenido);
@@ -46,28 +44,23 @@ public class ModeradorService {
         }
     }
 
-    @PreAuthorize("hasRole('MODERADOR')")
     public List<Usuario> listarUsuarios() {
         return usuarioService.listarUsuarios();
     }
 
-    @PreAuthorize("hasRole('MODERADOR')")
     public List<Contenido> listarContenidos() {
         return contenidoService.listarContenidos();
     }
 
-    @PreAuthorize("hasRole('MODERADOR')")
     public Page<Usuario> buscarUsuarios(String criterio, Pageable pageable) {
         return usuarioService.buscarUsuarios(criterio, pageable);
     }
 
-    @PreAuthorize("hasRole('MODERADOR')")
     public Page<Contenido> buscarContenidos(String criterio, Pageable pageable) {
         return contenidoService.buscarContenidos(criterio, pageable);
     }
 
 
-    @PreAuthorize("hasRole('MODERADOR')")
     public Optional<Usuario> obtenerDetallesUsuario(String correo) {
         validarCorreo(correo);
         return usuarioService.buscarPorCorreo(correo);
